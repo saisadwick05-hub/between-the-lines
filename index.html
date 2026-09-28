@@ -1,0 +1,3299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Between the Lines</title>
+
+<style>
+:root{
+  --bg:#eee9df;
+  --ink:#171613;
+  --muted:#77736b;
+  --line:#c9c3b8;
+  --soft:#f5f0e7;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,Arial,sans-serif;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:72px;
+  padding:0 5vw;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  z-index:20;
+
+  background:rgba(238,233,223,.9);
+  backdrop-filter:blur(12px);
+
+  border-bottom:1px solid transparent;
+  transition:.3s ease;
+}
+
+header.scrolled{
+  border-color:var(--line);
+}
+
+.logo{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:-.04em;
+}
+
+nav{
+  display:flex;
+  gap:24px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+nav a{
+  opacity:.65;
+  transition:.25s;
+}
+
+nav a:hover{
+  opacity:1;
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+main{
+  padding-top:72px;
+}
+
+.page{
+  min-height:100vh;
+  padding:10vw 5vw;
+}
+
+.fade{
+  opacity:0;
+  transform:translateY(25px);
+  transition:
+    opacity .8s ease,
+    transform .8s ease;
+}
+
+.fade.visible{
+  opacity:1;
+  transform:none;
+}
+
+/* =========================
+   HOME
+========================= */
+
+.hero{
+  min-height:calc(100vh - 72px);
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.eyebrow{
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.hero h1{
+  margin:25px 0 40px;
+
+  font-size:clamp(60px,11vw,165px);
+  line-height:.84;
+  letter-spacing:-.075em;
+  font-weight:500;
+}
+
+.hero p{
+  max-width:430px;
+  color:var(--muted);
+  font-size:15px;
+}
+
+/* =========================
+   SECTION HEAD
+========================= */
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+
+  border-bottom:1px solid var(--line);
+
+  padding-bottom:18px;
+  margin-bottom:45px;
+}
+
+.section-head h2{
+  margin:0;
+
+  font-size:clamp(40px,6vw,80px);
+  line-height:.9;
+
+  font-weight:400;
+  letter-spacing:-.06em;
+}
+
+.number{
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  color:var(--muted);
+}
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5vw;
+  align-items:center;
+}
+
+.about-copy{
+  font-size:clamp(30px,4vw,58px);
+  font-weight:700;
+  line-height:1.05;
+  letter-spacing:-.05em;
+}
+
+.about-copy span{
+  color:var(--muted);
+}
+
+.about-grid p{
+  max-width:520px;
+  line-height:1.7;
+}
+
+.about-grid > div:last-child{
+  padding-top:0;
+  align-self:center;
+}
+
+.about-note{
+  margin-top:40px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+/* =========================
+   CATEGORIES
+========================= */
+
+.explore-tools{
+  margin:12px 0 4px;
+}
+
+.explore-label{
+  margin-bottom:10px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.search-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--line);
+}
+
+.poem-search{
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--ink);
+  padding:12px 0;
+  font-family:"Courier New",monospace;
+  font-size:12px;
+}
+
+.poem-search::placeholder{color:var(--muted);}
+
+.search-clear{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:8px 0;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+}
+
+.search-clear:hover{color:var(--ink);}
+
+.category-bar{
+  display:flex;
+  gap:9px;
+
+  overflow-x:auto;
+
+  padding:5px 0 22px;
+
+  scrollbar-width:none;
+}
+
+.category-bar::-webkit-scrollbar{
+  display:none;
+}
+
+.cat{
+  white-space:nowrap;
+
+  border:1px solid var(--line);
+  background:transparent;
+
+  border-radius:999px;
+
+  padding:10px 15px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+
+  transition:.25s;
+}
+
+.cat:hover,
+.cat.active{
+  background:var(--ink);
+  color:var(--bg);
+}
+
+/* =========================
+   POETRY
+========================= */
+
+.poem-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+
+  gap:1px;
+
+  background:var(--line);
+  border:1px solid var(--line);
+}
+
+.poem-card{
+  background:var(--bg);
+
+  min-height:330px;
+
+  padding:28px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  transition:
+    transform .35s ease,
+    background .35s ease;
+}
+
+.poem-card:hover{
+  transform:translateY(-5px);
+  background:#e9e3d8;
+}
+
+.meta{
+  display:flex;
+  justify-content:space-between;
+
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+.poem-card h3{
+  margin:28px 0 16px;
+
+  font-size:28px;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+
+.poem-preview{
+  font-family:Georgia,serif;
+  line-height:1.6;
+  color:#4d4a44;
+
+  white-space:pre-line;
+
+  max-height:135px;
+  overflow:hidden;
+}
+
+
+.poem-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+
+.poem-action{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:8px 11px;
+  color:var(--ink);
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+}
+
+.poem-action:hover{
+  border-color:var(--ink);
+}
+
+.poem-action.active{
+  border-color:var(--ink);
+  background:var(--ink);
+  color:var(--bg);
+}
+
+.poem-action:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.share-menu{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.share-btn{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:8px 11px;
+  color:var(--ink);
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+}
+
+.share-btn:hover{
+  border-color:var(--ink);
+}
+
+.share-status{
+  min-height:14px;
+  margin-top:10px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.account-library{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  margin-top:28px;
+}
+
+.library-list{
+  display:grid;
+  gap:10px;
+}
+
+.library-item{
+  border-bottom:1px solid var(--line);
+  padding:10px 0;
+  cursor:pointer;
+}
+
+.library-item:hover{
+  opacity:.65;
+}
+
+.library-item-title{
+  margin:0 0 6px;
+  font-size:18px;
+  font-weight:400;
+}
+
+.library-item-meta{
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+@media(max-width:700px){
+  .account-library{grid-template-columns:1fr;}
+}
+
+.view-more{
+  border:0;
+  border-top:1px solid var(--line);
+
+  background:none;
+
+  padding:16px 0 0;
+
+  text-align:left;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+.more-wrap{
+  margin:38px;
+  text-align:center;
+}
+
+.more-btn,
+.outline-btn{
+  border:1px solid var(--ink);
+
+  background:transparent;
+
+  padding:13px 22px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+
+  transition:.25s;
+}
+
+.more-btn:hover,
+.outline-btn:hover{
+  background:var(--ink);
+  color:var(--bg);
+}
+
+/* =========================
+   CONVERSATIONS
+========================= */
+
+.conversation-list{display:grid;gap:12px;max-width:850px;}
+.conversation-card{border:1px solid var(--line);padding:18px;background:transparent;}
+.conversation-card:hover{background:var(--soft);}
+.conversation-meta{font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.conversation-title{font-size:20px;font-weight:400;margin-bottom:8px;}
+.conversation-preview{font-family:Georgia,serif;line-height:1.6;color:#4d4a44;white-space:pre-line;}
+.conversation-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;}
+.conversation-actions button{border:1px solid var(--line);background:transparent;padding:9px 12px;font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;}
+.conversation-actions button:hover{border-color:var(--ink);}
+.conversation-actions .primary{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.chat-box{max-width:850px;border-top:1px solid var(--line);padding-top:25px;}
+.chat-messages{display:grid;gap:10px;max-height:480px;overflow:auto;margin-bottom:18px;}
+.chat-message{max-width:75%;padding:12px 14px;border:1px solid var(--line);white-space:pre-line;font-family:Georgia,serif;line-height:1.55;position:relative;}
+.chat-message.mine{margin-left:auto;background:var(--soft);}
+.chat-time{display:block;margin-top:7px;font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:var(--muted);}
+.chat-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:center;}
+.chat-tool,.reaction-btn{border:1px solid var(--line);background:transparent;padding:5px 7px;font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;cursor:pointer;}
+.chat-tool:hover,.reaction-btn:hover{border-color:var(--ink);}
+.chat-reactions{display:flex;gap:5px;flex-wrap:wrap;}
+.chat-reaction-menu{display:none;gap:4px;flex-wrap:wrap;}
+.chat-reaction-menu.open{display:flex;}
+.chat-reaction-count{font-family:"Courier New",monospace;font-size:10px;padding:4px 6px;border:1px solid var(--line);background:transparent;}
+.chat-unsent{font-style:italic;color:var(--muted);}
+.chat-compose{display:flex;gap:10px;align-items:end;}
+.chat-compose textarea{min-height:90px;flex:1;}
+.chat-limit{font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+
+/* =========================
+   DEAD POETS
+========================= */
+
+.dead{
+  min-height:auto;
+
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+.dead h3{
+  font-size:clamp(42px,6vw,78px);
+  line-height:.9;
+
+  font-weight:400;
+  letter-spacing:-.06em;
+}
+
+.dead > p{
+  max-width:520px;
+
+  margin-top:25px;
+
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* =========================
+   DEAD POETS ARCHIVE
+========================= */
+.dead-archive-intro{
+  padding:65px 0 55px;
+  max-width:900px;
+}
+.dead-archive-intro h3{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:clamp(52px,8vw,110px);
+  line-height:.86;
+  font-weight:400;
+  letter-spacing:-.06em;
+}
+.dead-archive-intro p{
+  margin-top:28px;
+  max-width:560px;
+  color:var(--muted);
+  line-height:1.65;
+}
+.dead-feature{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:65px 0;
+  display:grid;
+  grid-template-columns:160px 1fr;
+  gap:65px;
+}
+.dead-feature-meta{
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  line-height:2;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.dead-feature-content{max-width:800px;}
+.dead-feature-content h4{
+  margin:0 0 30px;
+  font-family:Georgia,serif;
+  font-size:clamp(38px,5vw,70px);
+  line-height:.95;
+  font-weight:400;
+  letter-spacing:-.04em;
+}
+.dead-feature-body{
+  max-width:680px;
+  white-space:pre-line;
+  font-family:Georgia,serif;
+  font-size:19px;
+  line-height:1.8;
+}
+.dead-author{
+  margin-top:35px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+}
+.dead-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+.dead-actions button{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:9px 12px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+}
+.dead-actions button:hover{background:var(--ink);color:var(--bg);}
+.dead-archive-head{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+  padding:70px 0 18px;
+  margin-bottom:0;
+}
+.dead-archive-head span{
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.dead-archive-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+}
+.dead-archive-card{
+  background:var(--bg);
+  min-height:330px;
+  padding:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:.25s ease;
+}
+.dead-archive-card:hover{background:var(--soft);}
+.dead-card-number{font-family:"Courier New",monospace;font-size:9px;color:var(--muted);}
+.dead-card-mode{font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:var(--muted);margin-top:7px;}
+.dead-archive-card h4{
+  margin:35px 0 16px;
+  font-family:Georgia,serif;
+  font-size:30px;
+  font-weight:400;
+  line-height:1.02;
+}
+.dead-archive-card p{
+  font-family:Georgia,serif;
+  font-size:14px;
+  line-height:1.6;
+  color:#4d4a44;
+  white-space:pre-line;
+  max-height:115px;
+  overflow:hidden;
+}
+.dead-card-author{
+  margin-top:22px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+}
+.dead-empty{
+  border:1px solid var(--line);
+  padding:40px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.dead-admin-note{
+  margin-top:20px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* =========================
+   SPREAD YOUR WINGS
+========================= */
+
+.wings{
+  min-height:80vh;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+}
+
+.wings h2{
+  margin-top:20px;
+
+  font-size:clamp(65px,12vw,170px);
+
+  line-height:.8;
+
+  font-weight:400;
+
+  letter-spacing:-.08em;
+}
+
+.wings p{
+  max-width:430px;
+
+  margin:35px auto;
+
+  color:var(--muted);
+}
+
+.fly-link{
+  font-family:"Courier New",monospace;
+  font-size:11px;
+
+  text-transform:uppercase;
+
+  border-bottom:1px solid var(--ink);
+
+  padding-bottom:5px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+  border-top:1px solid var(--line);
+
+  padding:32px 5vw;
+
+  display:flex;
+  justify-content:space-between;
+
+  gap:20px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+footer div{
+  display:flex;
+  gap:20px;
+}
+
+/* =========================
+   SEPARATE PAGES
+========================= */
+
+.subpage{
+  display:none;
+
+  min-height:100vh;
+
+  padding:125px 5vw 80px;
+}
+
+.subpage.active{
+  display:block;
+}
+
+.subpage-title{
+  margin:0 0 60px;
+
+  font-size:clamp(55px,10vw,130px);
+
+  line-height:.84;
+
+  letter-spacing:-.075em;
+
+  font-weight:400;
+}
+
+.back{
+  border:0;
+  border-bottom:1px solid var(--ink);
+
+  background:none;
+
+  padding-bottom:5px;
+
+  margin-bottom:55px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  text-transform:uppercase;
+}
+
+.form-layout{
+  max-width:850px;
+}
+
+.field{
+  margin-bottom:22px;
+}
+
+label{
+  display:block;
+
+  margin-bottom:8px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+input,
+select,
+textarea{
+  width:100%;
+
+  border:1px solid var(--line);
+
+  background:transparent;
+
+  padding:15px;
+
+  color:var(--ink);
+
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--ink);
+}
+
+/* =========================
+   ACCOUNT
+========================= */
+
+.account-grid{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:18px;
+}
+
+.avatar-preview{
+  width:60px;
+  height:60px;
+
+  margin-top:12px;
+
+  border:1px dashed var(--line);
+
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  overflow:hidden;
+
+  font-family:"Courier New",monospace;
+  font-size:9px;
+
+  color:var(--muted);
+}
+
+.avatar-preview img{
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+}
+
+/* =========================
+   AUTH SWITCH / LOGIN
+========================= */
+
+.auth-switch{
+  margin-top:18px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.auth-link{
+  border:0;
+  border-bottom:1px solid var(--ink);
+  background:none;
+  padding:0 0 3px;
+  color:var(--ink);
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+.auth-link:hover{
+  opacity:.6;
+}
+
+.auth-note{
+  margin-top:12px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  line-height:1.6;
+  color:var(--muted);
+}
+
+.account-welcome{
+  display:none;
+}
+
+.account-welcome.active{
+  display:block;
+}
+
+.account-form.hidden,
+.login-form.hidden,
+.password-recovery.hidden{
+  display:none;
+}
+
+.account-email{
+  margin:0 0 28px;
+  font-family:"Courier New",monospace;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.profile-section{
+  margin-top:28px;
+  padding-top:28px;
+  border-top:1px solid var(--line);
+}
+
+.profile-section-title{
+  margin:0 0 18px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.profile-bio{
+  min-height:110px;
+  resize:vertical;
+}
+
+.profile-stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:22px;
+  margin-top:20px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.profile-poems{
+  display:grid;
+  gap:12px;
+  margin-top:18px;
+}
+
+.profile-poem{
+  border:1px solid var(--line);
+  padding:16px;
+  cursor:pointer;
+}
+
+.profile-poem:hover{
+  opacity:.7;
+}
+
+.profile-poem-title{
+  margin:0 0 8px;
+  font-family:Georgia,serif;
+  font-size:18px;
+}
+
+.profile-poem-meta{
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.account-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:25px;
+}
+
+.danger-btn{
+  border:1px solid #8a3027;
+  color:#8a3027;
+  background:transparent;
+  padding:13px 22px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  transition:.25s;
+}
+
+.danger-btn:hover{
+  background:#8a3027;
+  color:var(--bg);
+}
+
+/* =========================
+   NOTEPAD
+========================= */
+
+.notepad{
+  background:var(--soft);
+
+  border:1px solid var(--line);
+
+  padding:30px;
+}
+
+textarea{
+  min-height:450px;
+
+  resize:vertical;
+
+  border:0;
+  border-bottom:1px solid var(--line);
+
+  background:transparent;
+
+  padding:10px 0;
+
+  font-family:Georgia,serif;
+  font-size:18px;
+
+  line-height:1.75;
+}
+
+.counter{
+  padding:12px 0;
+
+  text-align:right;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+.post-actions{
+  margin-top:18px;
+
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+}
+
+.fly{
+  border:1px solid var(--ink);
+
+  background:var(--ink);
+  color:var(--bg);
+
+  padding:14px 28px;
+
+  font-family:"Courier New",monospace;
+  font-size:11px;
+
+  text-transform:uppercase;
+
+  transition:.25s;
+}
+
+.fly:hover{
+  opacity:.75;
+}
+
+.error{
+  min-height:15px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  color:#8a3027;
+}
+
+/* =========================
+   POEM DETAIL
+========================= */
+
+.detail-poem{
+  max-width:850px;
+}
+
+.detail-meta{
+  display:flex;
+  gap:25px;
+
+  margin-bottom:40px;
+
+  font-family:"Courier New",monospace;
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+}
+
+.detail-poem h2{
+  margin-bottom:35px;
+
+  font-size:clamp(45px,7vw,90px);
+
+  line-height:.95;
+
+  font-weight:400;
+
+  letter-spacing:-.06em;
+}
+
+.detail-body{
+  white-space:pre-wrap;
+
+  font-family:Georgia,serif;
+  font-size:20px;
+
+  line-height:1.8;
+}
+
+/* =========================
+   ENVELOPE ANIMATION
+========================= */
+
+.envelope-overlay{
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:100;
+
+  background:var(--bg);
+
+  place-items:center;
+}
+
+.envelope-overlay.show{
+  display:grid;
+}
+
+.envelope{
+  font-size:90px;
+
+  animation:flyAway 1.8s ease forwards;
+}
+
+@keyframes flyAway{
+
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  55%{
+    transform:translate(25vw,-12vh) scale(.7);
+    opacity:1;
+  }
+
+  100%{
+    transform:translate(48vw,-45vh) scale(.05);
+    opacity:0;
+  }
+
+}
+
+/* =========================
+   ADMIN CONTROLS
+========================= */
+.admin-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:18px;
+}
+.admin-btn{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  padding:8px 10px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  transition:.25s;
+}
+.admin-btn:hover{
+  background:var(--ink);
+  color:var(--bg);
+}
+.admin-btn.delete{
+  color:#8a3027;
+  border-color:#8a3027;
+}
+.admin-btn.delete:hover{
+  background:#8a3027;
+  color:var(--bg);
+}
+.empty{
+  padding:50px 30px;
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:var(--bg);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+  .poem-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  header{
+    height:64px;
+    padding:0 6vw;
+  }
+
+  nav{
+    gap:10px;
+    font-size:8px;
+  }
+
+  main{
+    padding-top:64px;
+  }
+
+  .page{
+    padding:18vw 6vw;
+  }
+
+  .hero h1{
+    font-size:19vw;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+    gap:35px;
+  }
+
+  .account-grid{
+    grid-template-columns:1fr;
+  }
+
+  .poem-grid{
+    grid-template-columns:1fr;
+  }
+  .dead-feature{grid-template-columns:1fr;gap:30px;padding:45px 0;}
+  .dead-archive-grid{grid-template-columns:1fr;}
+
+
+  .subpage{
+    padding:105px 6vw 60px;
+  }
+
+  .subpage-title{
+    font-size:18vw;
+  }
+
+  .notepad{
+    padding:20px;
+  }
+
+  footer{
+    padding:30px 6vw;
+
+    flex-direction:column;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header id="header">
+
+  <a href="#home" class="logo">
+    BETWEEN THE LINES.
+  </a>
+
+  <nav>
+
+    <a href="#home">Home</a>
+
+    <a href="#about">About</a>
+
+    <a href="#dead">Dead Poets</a>
+
+    <a href="#fly">FLY</a>
+
+    <a href="#conversations">Conversations</a>
+
+    <a href="#login">Login</a>
+
+    <a href="#account">Account</a>
+
+  </nav>
+
+</header>
+
+
+<!-- =========================
+     MAIN WEBSITE
+========================= -->
+
+<main id="site">
+
+
+<!-- HOME -->
+
+<section class="page hero fade" id="home">
+
+  <div class="eyebrow">
+    Between the Lines / 001
+  </div>
+
+  <h1>
+    A PLATFORM<br>
+    FOR LOST POETRY.
+  </h1>
+
+  <p>
+    For the words that stayed inside.
+    For the poems that never found a place to land.
+  </p>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section class="page fade" id="about">
+
+  <div class="section-head">
+
+    <h2>About</h2>
+
+    <span class="number">
+      002
+    </span>
+
+  </div>
+
+
+  <div class="about-grid">
+
+    <div class="about-copy">
+
+      Hola, fellow poets.
+
+      <br>
+
+      Welcome to Between the Lines —
+      a space for the words that linger
+      somewhere between what we feel
+      and what we say.
+
+    </div>
+
+
+    <div>
+
+      <p>
+
+        Between the Lines is a place to leave
+        the words you were never ready to say.
+
+        Read what others couldn't say.
+        Share what you couldn't keep inside.
+        And let every poem find its way.
+
+      </p>
+
+      <p class="about-note">
+
+        Read it. Write it. Let it fly.
+
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- DEAD POETS -->
+
+<section class="page dead fade" id="dead">
+
+  <div class="section-head">
+    <h2>Dead Poets</h2>
+    <span class="number">003</span>
+  </div>
+
+  <div class="dead-archive-intro">
+    <h3>Some words<br>deserve to stay.</h3>
+    <p>A curated archive of poems selected from Between the Lines. Five poems can be featured for seven days at a time, while poems kept in the archive remain until the admin chooses to demote them.</p>
+
+    <div class="more-wrap" style="margin:30px 0 0;text-align:left;">
+      <button class="more-btn" id="joinDeadPoets" type="button">
+        JOIN THE DEAD POETS →
+      </button>
+    </div>
+  </div>
+
+  <div id="deadFeatured"></div>
+
+  <div class="dead-archive-head">
+    <span>The Archive</span>
+    <span id="deadArchiveCount">00 poems</span>
+  </div>
+
+  <div class="dead-archive-grid" id="deadPoems"></div>
+
+  <div id="deadMorePoems" style="margin-top:1px"></div>
+
+  <div class="dead-admin-note">Weekly selections expire after 7 days. Permanent selections stay until demoted.</div>
+
+</section>
+
+
+<!-- FLY / ALL POEMS -->
+
+<section class="page fade" id="fly">
+
+  <div class="section-head">
+
+    <h2>FLY</h2>
+
+    <span class="number">
+      004
+    </span>
+
+  </div>
+
+
+  <!-- SEARCH / EXPLORE -->
+
+  <div class="explore-tools">
+    <div class="explore-label">Explore the lines</div>
+    <div class="search-wrap">
+      <input id="poemSearch" class="poem-search" type="search" placeholder="Search poems, poets, or words..." autocomplete="off" aria-label="Search poems, poets, or words">
+      <button id="clearSearch" class="search-clear" type="button" aria-label="Clear search">CLEAR</button>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+
+  <div
+    class="category-bar"
+    id="categories">
+  </div>
+
+
+  <!-- POEMS -->
+
+  <div
+    class="poem-grid"
+    id="poems">
+  </div>
+
+
+  <div class="more-wrap">
+
+    <button
+      class="more-btn"
+      id="more">
+
+      View More
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- FINAL SPREAD YOUR WINGS -->
+
+<section class="page wings fade">
+
+  <div>
+
+    <div class="eyebrow">
+      005 / Final page
+    </div>
+
+
+    <h2>
+
+      SPREAD<br>
+      YOUR WINGS.
+
+    </h2>
+
+
+    <p>
+
+      Your words don't belong inside
+      you forever.
+
+      Write them down.
+      Give them somewhere to go.
+
+    </p>
+
+
+    <a
+      class="fly-link"
+      href="#spread">
+
+      Begin writing →
+
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer
+  class="fade"
+  id="contact">
+
+  <div>
+
+    BETWEEN THE LINES.
+    ·
+    © 2026
+
+  </div>
+
+
+  <div>
+
+    <a href="mailto:saisadwick05@gmail.com">
+
+      saisadwick05@gmail.com
+
+    </a>
+
+
+    <a
+      href="https://www.instagram.com/izu.writes_/"
+      target="_blank">
+
+      Instagram
+
+    </a>
+
+    <a
+      href="https://ig.me/j/vMiXYott9K4bsScF/"
+      target="_blank"
+      rel="noopener noreferrer">
+
+      Dead Poets GC
+
+    </a>
+
+  </div>
+
+</footer>
+
+</main>
+
+
+<!-- =========================
+     ACCOUNT PAGE
+========================= -->
+
+<section
+  class="subpage fade"
+  id="account">
+
+  <button
+    class="back"
+    data-home>
+    ← Back
+  </button>
+
+  <!-- CREATE ACCOUNT -->
+  <div class="account-form" id="createAccountForm">
+    <h1 class="subpage-title">
+      CREATE<br>
+      YOUR ACCOUNT.
+    </h1>
+
+    <div class="form-layout">
+      <div class="account-grid">
+        <div class="field">
+          <label>Name / Pen Name</label>
+          <input id="name" placeholder="How should we know you?">
+        </div>
+
+        <div class="field">
+          <label>Age</label>
+          <input id="age" type="number" min="1" max="120">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="you@example.com">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" minlength="6" placeholder="At least 6 characters">
+      </div>
+
+      <div class="field">
+        <label>Gender</label>
+        <select id="gender">
+          <option value="">Choose an option</option>
+          <option value="MR">Mr</option>
+          <option value="MRS">Mrs</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Profile Image — optional</label>
+        <input id="image" type="file" accept="image/*">
+        <div class="avatar-preview" id="avatar">IMAGE</div>
+      </div>
+
+      <button class="outline-btn" id="save">Create Account</button>
+
+      <p class="error" id="accountMsg"></p>
+
+      <div class="auth-switch">
+        Already have an account?
+        <button class="auth-link" id="showLogin" type="button">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login-form hidden" id="loginForm">
+    <h1 class="subpage-title">
+      WELCOME<br>
+      BACK.
+    </h1>
+
+    <div class="form-layout">
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Your password" autocomplete="current-password">
+      </div>
+
+      <button class="outline-btn" id="login" type="button">Login</button>
+
+      <p class="error" id="loginMsg"></p>
+
+      <div class="auth-switch">
+        <button class="auth-link" id="forgotPassword" type="button">Forgot password?</button>
+      </div>
+
+      <div class="auth-switch">
+        Don't have an account?
+        <button class="auth-link" id="showCreate" type="button">Create Account</button>
+      </div>
+
+      <p class="auth-note">
+        You can use the same account on another phone, tablet, or computer.
+      </p>
+    </div>
+  </div>
+
+  <!-- PASSWORD RECOVERY -->
+  <div class="password-recovery hidden" id="passwordRecoveryForm">
+    <h1 class="subpage-title">
+      RESET<br>
+      YOUR PASSWORD.
+    </h1>
+
+    <div class="form-layout">
+      <div class="field">
+        <label>New Password</label>
+        <input id="newPassword" type="password" minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+      </div>
+
+      <div class="field">
+        <label>Confirm Password</label>
+        <input id="confirmNewPassword" type="password" minlength="6" placeholder="Enter it again" autocomplete="new-password">
+      </div>
+
+      <button class="outline-btn" id="updatePassword" type="button">Update Password</button>
+      <p class="error" id="recoveryMsg"></p>
+    </div>
+  </div>
+
+  <!-- LOGGED-IN ACCOUNT -->
+  <div class="account-welcome" id="accountWelcome">
+    <h1 class="subpage-title">
+      WELCOME<br>
+      BACK, POET.
+    </h1>
+
+    <div class="form-layout">
+      <p class="account-email" id="loggedInEmail"></p>
+
+      <div class="profile-section">
+        <p class="profile-section-title">Your poet profile</p>
+
+        <div class="account-grid">
+          <div class="field">
+            <label>Name / Pen Name</label>
+            <input id="loggedInName" autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label>Age</label>
+            <input id="loggedInAge" type="number" min="1" max="120">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Gender</label>
+          <select id="loggedInGender">
+            <option value="">Choose an option</option>
+            <option value="MR">Mr</option>
+            <option value="MRS">Mrs</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="profileBio" class="profile-bio" maxlength="500" placeholder="A few words about the poet behind the lines..."></textarea>
+        </div>
+
+        <button class="outline-btn" id="saveProfile" type="button">Save Profile</button>
+        <p class="error" id="profileMsg"></p>
+
+        <div class="profile-stats">
+          <span id="profilePoemCount">00 poems</span>
+          <span id="profileJoined">Joined between the lines</span>
+        </div>
+
+        <div class="profile-section">
+          <p class="profile-section-title">Your poems</p>
+          <div class="profile-poems" id="profilePoems">
+            <div class="empty">Your published poems will appear here.</div>
+          </div>
+        </div>
+
+        <div class="account-library">
+          <div class="profile-section">
+            <p class="profile-section-title">Liked poems</p>
+            <div class="library-list" id="likedPoems">
+              <div class="empty">Poems you like will appear here.</div>
+            </div>
+          </div>
+          <div class="profile-section">
+            <p class="profile-section-title">Saved poems</p>
+            <div class="library-list" id="savedPoems">
+              <div class="empty">Poems you save will appear here.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="account-actions">
+        <a class="outline-btn" href="#spread">Spread Your Wings →</a>
+        <button class="danger-btn" id="logout" type="button">Log Out</button>
+      </div>
+
+      <p class="error" id="logoutMsg"></p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SPREAD YOUR WINGS PAGE
+========================= -->
+
+<section
+  class="subpage fade"
+  id="spread">
+
+
+  <button
+    class="back"
+    data-home>
+
+    ← Back
+
+  </button>
+
+
+  <h1 class="subpage-title">
+
+    SPREAD<br>
+    YOUR WINGS.
+
+  </h1>
+
+
+  <div class="form-layout">
+
+
+    <div class="field">
+
+      <label>
+        Title
+      </label>
+
+      <input
+        id="title"
+        maxlength="100"
+        placeholder="Give your words a name">
+
+    </div>
+
+
+    <div class="field">
+
+      <label>
+        Genre
+      </label>
+
+      <select id="genre"></select>
+
+    </div>
+
+
+    <div class="notepad">
+
+      <textarea
+        id="text"
+        placeholder="Start writing here...">
+      </textarea>
+
+
+      <div class="counter">
+
+        <span id="count">
+          0
+        </span>
+
+        /
+        3,000 words
+
+      </div>
+
+    </div>
+
+
+    <div class="post-actions">
+
+      <span
+        class="error"
+        id="postMsg">
+      </span>
+
+
+      <button
+        class="fly"
+        id="publishFly">
+
+        FLY →
+
+      </button>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     CONVERSATIONS PAGE
+========================= -->
+
+<section class="subpage fade" id="conversations">
+  <button class="back" data-home>← Back</button>
+  <h1 class="subpage-title">POET<br>CONVERSATIONS.</h1>
+  <div class="form-layout">
+    <p class="account-note" style="font-family:'Courier New',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:35px;">Poems stay. Conversations fade.</p>
+    <div id="conversationList" class="conversation-list"><div class="empty">Loading conversations...</div></div>
+    <div id="chatPanel" class="chat-box" style="display:none;margin-top:40px;">
+      <button class="back" id="closeChat" type="button">← Back to conversations</button>
+      <div id="chatTitle" class="conversation-title"></div>
+      <div id="chatLimit" class="chat-limit"></div>
+      <div id="chatMessages" class="chat-messages"></div>
+      <div class="chat-compose">
+        <textarea id="chatInput" maxlength="2000" placeholder="Write something between the lines..."></textarea>
+        <button class="fly" id="sendChat" type="button">SEND →</button>
+      </div>
+      <p class="error" id="chatMsg"></p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     POEM DETAIL PAGE
+========================= -->
+
+<section
+  class="subpage fade"
+  id="detail">
+
+
+  <button
+    class="back"
+    data-home>
+
+    ← Back
+
+  </button>
+
+
+  <div
+    class="detail-poem"
+    id="detailContent">
+  </div>
+
+
+</section>
+
+
+<!-- ENVELOPE -->
+
+<div
+  class="envelope-overlay"
+  id="envelope">
+
+  <div class="envelope">
+    ✉
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+const SUPABASE_URL = "https://zwpztvtizjeouefglqsq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_KM6OXzeHmmFRL4ylF_uEeg_zFc4V4fk";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const ADMIN_EMAILS = [
+  "sadwickbannu@gmail.com",
+  "saisadwick05@gmail.com"
+].map(email => email.toLowerCase());
+
+const DEAD_POETS_ADMIN_ID = "525bb0e6-9443-41ec-b023-90819d0a03d2";
+
+let currentUser = null;
+let isAdmin = false;
+let likedPoemIds = new Set();
+let bookmarkedPoemIds = new Set();
+let likeCounts = {};
+let bookmarkCounts = {};
+let activeCategory = "All";
+let searchTerm = "";
+let poemsCache = [];
+let activeConversation = null;
+let conversationTimer = null;
+let passwordRecoveryMode = false;
+
+const genres = [
+  "Guilt","Dark Romance","Love","Hope","Sorrow","Poetry",
+  "For the One","Death","Dreams","Nostalgia","Letter","Lonely",
+  "Memories","Silence","Unspoken"
+];
+
+const seedPoems = [
+  { title:"For the words I swallowed", genre:"Unspoken", author:"Between the Lines", body:`There are words
+that never learned how to leave me.
+
+So I kept them somewhere between
+my heart and my mouth.` },
+  { title:"A letter I never sent", genre:"Letter", author:"A lost poet", body:`Dear you,
+
+I don't know if this letter
+belongs to you anymore.
+
+Maybe it belongs to the version
+of me who still waited.` },
+  { title:"After midnight", genre:"Lonely", author:"Anonymous", body:`The room is quiet,
+
+but my thoughts
+have never been louder.
+
+Some nights loneliness sounds
+exactly like memory.` },
+  { title:"The one", genre:"For the One", author:"A lost poet", body:`If these words ever find you,
+
+know that somewhere
+between leaving and staying,
+
+I chose to remember.` }
+];
+
+function escapeHTML(text){
+  return String(text ?? "").replace(/[&<>"']/g, character => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[character]));
+}
+
+async function loadPoems(){
+  const container = document.getElementById("poems");
+  const deadContainer = document.getElementById("deadPoems");
+
+  if(container){
+    container.innerHTML = `<div class="empty">Loading poems...</div>`;
+  }
+
+  try{
+    const { data, error } = await supabaseClient
+      .from("poems")
+      .select("id,author_id,author_name,title,body,genre,is_promoted,dead_poet_mode,dead_poet_until,is_deleted,created_at")
+      .eq("is_deleted", false)
+      .order("created_at", { ascending:false });
+
+    if(error) throw error;
+
+    poemsCache = Array.isArray(data) ? data : [];
+    await loadInteractions();
+  }catch(error){
+    console.error("Could not load poems:", error);
+    poemsCache = [];
+
+    if(container){
+      container.innerHTML = `<div class="empty">Poems couldn't be loaded right now.</div>`;
+    }
+    if(deadContainer){
+      deadContainer.innerHTML = `<div class="empty">Premium poems couldn't be loaded.</div>`;
+    }
+    return;
+  }
+
+  renderCategories(activeCategory);
+  renderPoems(activeCategory);
+  renderDeadPoets();
+  renderDeadMore();
+  renderConversations();
+}
+
+async function loadInteractions(){
+  likedPoemIds = new Set();
+  bookmarkedPoemIds = new Set();
+  likeCounts = {};
+  bookmarkCounts = {};
+
+  const poemIds = poemsCache.map(poem => poem.id).filter(Boolean);
+  if(!poemIds.length) return;
+
+  const [likesResult, bookmarksResult] = await Promise.all([
+    supabaseClient.from("poem_likes").select("poem_id,user_id").in("poem_id", poemIds),
+    supabaseClient.from("poem_bookmarks").select("poem_id,user_id").in("poem_id", poemIds)
+  ]);
+
+  if(likesResult.error) console.error("Could not load likes:", likesResult.error);
+  if(bookmarksResult.error) console.error("Could not load bookmarks:", bookmarksResult.error);
+
+  (likesResult.data || []).forEach(row => {
+    likeCounts[row.poem_id] = (likeCounts[row.poem_id] || 0) + 1;
+    if(currentUser && row.user_id === currentUser.id) likedPoemIds.add(row.poem_id);
+  });
+
+  (bookmarksResult.data || []).forEach(row => {
+    bookmarkCounts[row.poem_id] = (bookmarkCounts[row.poem_id] || 0) + 1;
+    if(currentUser && row.user_id === currentUser.id) bookmarkedPoemIds.add(row.poem_id);
+  });
+}
+
+async function togglePoemInteraction(poemId, type, button){
+  if(!currentUser){
+    location.hash = "account";
+    return;
+  }
+
+  const table = type === "like" ? "poem_likes" : "poem_bookmarks";
+  const set = type === "like" ? likedPoemIds : bookmarkedPoemIds;
+  const counts = type === "like" ? likeCounts : bookmarkCounts;
+  const active = set.has(poemId);
+  button.disabled = true;
+
+  let error = null;
+  if(active){
+    const result = await supabaseClient.from(table).delete().eq("poem_id", poemId).eq("user_id", currentUser.id);
+    error = result.error;
+    if(!error){
+      set.delete(poemId);
+      counts[poemId] = Math.max(0, (counts[poemId] || 1) - 1);
+    }
+  }else{
+    const result = await supabaseClient.from(table).insert({ poem_id:poemId, user_id:currentUser.id });
+    error = result.error;
+    if(!error){
+      set.add(poemId);
+      counts[poemId] = (counts[poemId] || 0) + 1;
+    }
+  }
+
+  button.disabled = false;
+  if(error){
+    console.error(error);
+    alert(error.message || `Could not update ${type}.`);
+    return;
+  }
+
+  renderPoems(activeCategory);
+  renderDeadPoets();
+  renderDeadMore();
+  renderLibraryLists();
+}
+
+function renderLibraryLists(){
+  const liked = document.getElementById("likedPoems");
+  const saved = document.getElementById("savedPoems");
+  if(!currentUser){
+    if(liked) liked.innerHTML = `<div class="empty">Log in to see liked poems.</div>`;
+    if(saved) saved.innerHTML = `<div class="empty">Log in to see saved poems.</div>`;
+    return;
+  }
+
+  const makeList = (ids, container) => {
+    if(!container) return;
+    const items = poemsCache.filter(poem => ids.has(poem.id));
+    if(!items.length){
+      container.innerHTML = `<div class="empty">Nothing here yet.</div>`;
+      return;
+    }
+    container.innerHTML = items.map(poem => `
+      <article class="library-item" data-library-poem="${escapeHTML(poem.id)}">
+        <h3 class="library-item-title">${escapeHTML(poem.title)}</h3>
+        <div class="library-item-meta">${escapeHTML(poem.author_name || "Anonymous")} · ${escapeHTML(poem.genre || "Poetry")}</div>
+      </article>
+    `).join("");
+    container.querySelectorAll("[data-library-poem]").forEach(item => {
+      item.onclick = () => {
+        const poem = poemsCache.find(poem => poem.id === item.dataset.libraryPoem);
+        if(poem) showDetail(poem);
+      };
+    });
+  };
+
+  makeList(likedPoemIds, liked);
+  makeList(bookmarkedPoemIds, saved);
+}
+
+function getPoems(){
+  return poemsCache;
+}
+
+function renderCategories(active="All"){
+  const container = document.getElementById("categories");
+  if(!container) return;
+
+  container.innerHTML = ["All",...genres].map(category => `
+    <button class="cat ${category===active?"active":""}" data-category="${escapeHTML(category)}">
+      ${escapeHTML(category)}
+    </button>
+  `).join("");
+
+  container.querySelectorAll(".cat").forEach(button => {
+    button.onclick = () => {
+      activeCategory = button.dataset.category;
+      renderCategories(activeCategory);
+      renderPoems(activeCategory);
+    };
+  });
+}
+
+function poemCard(poem, index, filter="All"){
+  const admin = isAdmin && poem.id;
+  return `
+    <article class="poem-card">
+      <div>
+        <div class="meta">
+          <span>${escapeHTML(poem.genre || "Poetry")}</span>
+          <span>${escapeHTML(poem.author_name || poem.author || "Anonymous")}</span>
+        </div>
+        <h3>${escapeHTML(poem.title)}</h3>
+        <p class="poem-preview">${escapeHTML(poem.body)}</p>
+      </div>
+      ${admin ? `
+        <div class="admin-actions">
+          ${poem.is_promoted
+            ? `<button class="admin-btn" data-admin-action="remove" data-id="${escapeHTML(poem.id)}">Demote to FLY</button>`
+            : `<button class="admin-btn" data-admin-action="promote_weekly" data-id="${escapeHTML(poem.id)}">Feature 7 Days</button>
+               <button class="admin-btn" data-admin-action="promote_permanent" data-id="${escapeHTML(poem.id)}">Keep in Archive</button>`}
+          <button class="admin-btn delete" data-admin-action="delete" data-id="${escapeHTML(poem.id)}">Delete</button>
+        </div>
+      ` : ""}
+      <div class="poem-actions">
+        <button class="poem-action ${likedPoemIds.has(poem.id) ? "active" : ""}" data-interaction="like" data-id="${escapeHTML(poem.id)}" type="button">♥ Like ${likeCounts[poem.id] || 0}</button>
+        <button class="poem-action ${bookmarkedPoemIds.has(poem.id) ? "active" : ""}" data-interaction="bookmark" data-id="${escapeHTML(poem.id)}" type="button">🔖 Save ${bookmarkCounts[poem.id] || 0}</button>
+        <button class="poem-action" data-share-poem="${escapeHTML(poem.id)}" type="button">↗ Share</button>
+        ${currentUser && poem.author_id && poem.author_id !== currentUser.id ? `<button class="poem-action" data-talk-poet="${escapeHTML(poem.author_id)}" data-poet-name="${escapeHTML(poem.author_name || poem.author || "Poet")}" type="button">TALK TO THIS POET</button>` : ""}
+        <button class="view-more" data-index="${index}" data-filter="${escapeHTML(filter)}">View More →</button>
+      </div>
+    </article>
+  `;
+}
+
+function attachCardActions(containerSelector, sourceList){
+  document.querySelectorAll(`${containerSelector} .view-more`).forEach(button => {
+    button.onclick = event => {
+      event.stopPropagation();
+      showDetail(sourceList[Number(button.dataset.index)]);
+    };
+  });
+  document.querySelectorAll(`${containerSelector} [data-interaction]`).forEach(button => {
+    button.onclick = async event => {
+      event.preventDefault();
+      event.stopPropagation();
+      await togglePoemInteraction(button.dataset.id, button.dataset.interaction, button);
+    };
+  });
+  document.querySelectorAll(`${containerSelector} [data-talk-poet]`).forEach(button => {
+    button.onclick = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      openConversationRequest(button.dataset.talkPoet, button.dataset.poetName || "Poet");
+    };
+  });
+  document.querySelectorAll(`${containerSelector} [data-share-poem]`).forEach(button => {
+    button.onclick = async event => {
+      event.preventDefault();
+      event.stopPropagation();
+      await sharePoemById(button.dataset.sharePoem);
+    };
+  });
+  attachAdminActions();
+}
+
+function renderPoems(filter="All"){
+  activeCategory = filter;
+  const container = document.getElementById("poems");
+  if(!container) return;
+
+  const query = searchTerm.trim().toLowerCase();
+  const poems = getPoems().filter(poem => {
+    const matchesCategory = filter === "All" || poem.genre === filter;
+    if(!matchesCategory) return false;
+    if(!query) return true;
+
+    const searchable = [poem.title, poem.author_name, poem.author, poem.genre, poem.body]
+      .filter(Boolean).join(" ").toLowerCase();
+    return searchable.includes(query);
+  });
+
+  const countEl = document.getElementById("flyCount");
+  if(countEl){
+    const label = searchTerm.trim() ? "matching poems" : "poems in flight";
+    countEl.textContent = String(poems.length).padStart(2,"0") + ` ${label}`;
+  }
+
+  if(!poems.length){
+    container.innerHTML = `<div class="empty">${searchTerm.trim() ? "No poems found for this search." : "No poems in this category yet."}</div>`;
+    return;
+  }
+
+  container.innerHTML = poems.slice(0,4).map((poem,index) => poemCard(poem,index,filter)).join("");
+  attachCardActions("#poems", poems);
+}
+
+function activeDeadPoems(){
+  const now = Date.now();
+  return getPoems().filter(poem => {
+    if(!poem.is_promoted) return false;
+    if(poem.dead_poet_mode === "weekly" && poem.dead_poet_until){
+      return new Date(poem.dead_poet_until).getTime() > now;
+    }
+    return poem.dead_poet_mode === "permanent" || !poem.dead_poet_mode;
+  });
+}
+
+function deadModeLabel(poem){
+  if(poem.dead_poet_mode === "weekly"){
+    const until = poem.dead_poet_until ? new Date(poem.dead_poet_until) : null;
+    if(until && !Number.isNaN(until.getTime())){
+      return `Weekly · until ${until.toLocaleDateString(undefined,{day:"numeric",month:"short"})}`;
+    }
+    return "Weekly feature";
+  }
+  return "Permanent archive";
+}
+
+function deadCard(poem, index){
+  return `
+    <article class="dead-archive-card">
+      <div>
+        <div class="dead-card-number">${String(index + 1).padStart(3,"0")}</div>
+        <div class="dead-card-mode">${escapeHTML(deadModeLabel(poem))}</div>
+        <h4>${escapeHTML(poem.title)}</h4>
+        <p>${escapeHTML(poem.body)}</p>
+      </div>
+      <div>
+        <div class="dead-card-author">— ${escapeHTML(poem.author_name || poem.author || "Anonymous")}</div>
+        <div class="poem-actions">
+          <button class="poem-action ${likedPoemIds.has(poem.id) ? "active" : ""}" data-interaction="like" data-id="${escapeHTML(poem.id)}" type="button">♥ Like ${likeCounts[poem.id] || 0}</button>
+          <button class="poem-action ${bookmarkedPoemIds.has(poem.id) ? "active" : ""}" data-interaction="bookmark" data-id="${escapeHTML(poem.id)}" type="button">🔖 Save ${bookmarkCounts[poem.id] || 0}</button>
+          <button class="poem-action" data-share-poem="${escapeHTML(poem.id)}" type="button">↗ Share</button>
+          ${currentUser && poem.author_id && poem.author_id !== currentUser.id ? `<button class="poem-action" data-talk-poet="${escapeHTML(poem.author_id)}" data-poet-name="${escapeHTML(poem.author_name || poem.author || "Poet")}" type="button">TALK TO THIS POET</button>` : ""}
+          <button class="view-more" data-dead-poem="${escapeHTML(poem.id)}" type="button">Read →</button>
+        </div>
+        ${isAdmin ? `<div class="admin-actions"><button class="admin-btn" data-admin-action="remove" data-id="${escapeHTML(poem.id)}">Demote to FLY</button></div>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+function renderDeadPoets(){
+  const container = document.getElementById("deadPoems");
+  const featured = document.getElementById("deadFeatured");
+  const count = document.getElementById("deadArchiveCount");
+  if(!container) return;
+
+  const poems = activeDeadPoems();
+  if(count) count.textContent = `${String(poems.length).padStart(2,"0")} poems`;
+
+  if(!poems.length){
+    if(featured) featured.innerHTML = `<div class="dead-empty">No poems have entered the archive yet.</div>`;
+    container.innerHTML = "";
+    renderDeadMore();
+    return;
+  }
+
+  const featuredPoem = poems[0];
+  if(featured){
+    featured.innerHTML = `
+      <article class="dead-feature">
+        <div class="dead-feature-meta">Featured<br>Archive / 001<br>${escapeHTML(deadModeLabel(featuredPoem))}</div>
+        <div class="dead-feature-content">
+          <h4>${escapeHTML(featuredPoem.title)}</h4>
+          <div class="dead-feature-body">${escapeHTML(featuredPoem.body)}</div>
+          <div class="dead-author">— ${escapeHTML(featuredPoem.author_name || featuredPoem.author || "Anonymous")}</div>
+          <div class="dead-actions">
+            <button data-dead-feature-read="${escapeHTML(featuredPoem.id)}">Read poem</button>
+            <button data-share-poem="${escapeHTML(featuredPoem.id)}">↗ Share</button>
+            ${currentUser && featuredPoem.author_id && featuredPoem.author_id !== currentUser.id ? `<button data-talk-poet="${escapeHTML(featuredPoem.author_id)}" data-poet-name="${escapeHTML(featuredPoem.author_name || featuredPoem.author || "Poet")}">Talk to this poet</button>` : ""}
+          </div>
+        </div>
+      </article>`;
+  }
+
+  const archive = poems.slice(1,4);
+  container.innerHTML = archive.length ? archive.map((poem,index)=>deadCard(poem,index+1)).join("") : "";
+  attachDeadActions();
+  renderDeadMore();
+}
+
+function renderDeadMore(){
+  const container = document.getElementById("deadMorePoems");
+  if(!container) return;
+  const poems = activeDeadPoems().slice(4);
+  container.innerHTML = poems.length ? `<div class="dead-archive-grid">${poems.map((poem,index)=>deadCard(poem,index+4)).join("")}</div>` : "";
+  attachDeadActions();
+}
+
+function attachDeadActions(){
+  document.querySelectorAll("[data-dead-feature-read]").forEach(button=>{
+    button.onclick=()=>{ const poem=getPoems().find(p=>p.id===button.dataset.deadFeatureRead); if(poem) showDetail(poem); };
+  });
+  document.querySelectorAll("[data-dead-poem]").forEach(button=>{
+    button.onclick=()=>{ const poem=getPoems().find(p=>p.id===button.dataset.deadPoem); if(poem) showDetail(poem); };
+  });
+  document.querySelectorAll("#deadPoems [data-interaction], #deadMorePoems [data-interaction]").forEach(button=>{
+    button.onclick=async event=>{event.preventDefault(); await togglePoemInteraction(button.dataset.id,button.dataset.interaction,button);};
+  });
+  document.querySelectorAll("#deadPoems [data-share-poem], #deadMorePoems [data-share-poem], #deadFeatured [data-share-poem]").forEach(button=>{
+    button.onclick=async event=>{event.preventDefault(); await sharePoemById(button.dataset.sharePoem);};
+  });
+  document.querySelectorAll("#deadPoems [data-talk-poet], #deadMorePoems [data-talk-poet], #deadFeatured [data-talk-poet]").forEach(button=>{
+    button.onclick=event=>{event.preventDefault(); openConversationRequest(button.dataset.talkPoet,button.dataset.poetName||"Poet");};
+  });
+  document.querySelectorAll("#deadPoems [data-admin-action], #deadMorePoems [data-admin-action]").forEach(button=>{
+    button.onclick=async event=>{event.preventDefault(); event.stopPropagation(); await managePoem(button.dataset.id,button.dataset.adminAction);};
+  });
+}
+
+function getPoemShareUrl(poem){
+  const url = new URL(window.location.href);
+  url.hash = `poem=${encodeURIComponent(poem.id)}`;
+  return url.toString();
+}
+
+async function copyText(text){
+  if(navigator.clipboard && window.isSecureContext){
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+  const helper = document.createElement("textarea");
+  helper.value = text;
+  helper.style.position = "fixed";
+  helper.style.opacity = "0";
+  document.body.appendChild(helper);
+  helper.focus();
+  helper.select();
+  let copied = false;
+  try{ copied = document.execCommand("copy"); }catch(error){ copied = false; }
+  helper.remove();
+  return copied;
+}
+
+async function sharePoem(poem){
+  if(!poem) return;
+  const shareUrl = getPoemShareUrl(poem);
+  const shareText = `“${poem.title}” by ${poem.author_name || poem.author || "Anonymous"} — Between the Lines`;
+
+  if(navigator.share){
+    try{
+      await navigator.share({title:poem.title || "Between the Lines", text:shareText, url:shareUrl});
+      return;
+    }catch(error){
+      if(error?.name === "AbortError") return;
+    }
+  }
+
+  const copied = await copyText(shareUrl);
+  alert(copied ? "Poem link copied. You can paste it into WhatsApp, Instagram, or anywhere you want." : `Share this poem: ${shareUrl}`);
+}
+
+async function sharePoemById(poemId){
+  const poem = getPoems().find(item => item.id === poemId);
+  if(poem) await sharePoem(poem);
+}
+
+
+function conversationTime(value){
+  const d=new Date(value);
+  return d.toLocaleString(undefined,{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
+}
+
+async function joinDeadPoets(){
+  if(!currentUser){
+    location.hash="account";
+    return;
+  }
+
+  if(currentUser.id === DEAD_POETS_ADMIN_ID){
+    location.hash="conversations";
+    return;
+  }
+
+  const message = "I wanna promote my poem into Dead Poets.";
+
+  const {data,error}=await supabaseClient.rpc(
+    "create_poet_conversation_request",
+    {
+      p_recipient_id: DEAD_POETS_ADMIN_ID,
+      p_message: message
+    }
+  );
+
+  if(error){
+    console.error(error);
+    alert(error.message || "Could not start the Dead Poets request.");
+    return;
+  }
+
+  location.hash="conversations";
+  await renderConversations();
+
+  if(data?.request_id){
+    openConversation(data.request_id);
+  }
+}
+
+async function openConversationRequest(recipientId, poetName){
+  if(!currentUser){ location.hash="account"; return; }
+  if(recipientId === currentUser.id) return;
+
+  // Reopen an existing pending or accepted conversation instead of creating another request.
+  const {data: existingConversations, error: conversationsError}=await supabaseClient.rpc("get_my_poet_conversations");
+  if(conversationsError){
+    console.error(conversationsError);
+    alert(conversationsError.message || "Could not check your existing conversations.");
+    return;
+  }
+
+  const existing=(existingConversations || []).find(item=>{
+    const otherId = item.requester_id === currentUser.id ? item.recipient_id : item.requester_id;
+    return otherId === recipientId && (item.status === "accepted" || item.status === "pending");
+  });
+
+  if(existing){
+    location.hash="conversations";
+    await renderConversations();
+    openConversation(existing.id);
+    return;
+  }
+
+  const intro = prompt(`Start a conversation with ${poetName}. You can send up to 2 messages before they accept.`);
+  if(intro === null) return;
+  const message = intro.trim();
+  if(!message){ alert("Write a message first."); return; }
+
+  const {data,error}=await supabaseClient.rpc("create_poet_conversation_request",{
+    p_recipient_id:recipientId,
+    p_message:message
+  });
+  if(error){
+    console.error(error);
+    alert(error.message||"Could not send the conversation request.");
+    return;
+  }
+
+  location.hash="conversations";
+  await renderConversations();
+  if(data?.request_id) openConversation(data.request_id);
+}
+
+async function renderConversations(){
+  const list=document.getElementById("conversationList");
+  if(!list) return;
+  if(!currentUser){ list.innerHTML='<div class="empty">Log in to see your conversations.</div>'; return; }
+  const {data,error}=await supabaseClient.rpc("get_my_poet_conversations");
+  if(error){ console.error(error); list.innerHTML=`<div class="empty">${escapeHTML(error.message||"Could not load conversations.")}</div>`; return; }
+  if(!data?.length){ list.innerHTML='<div class="empty">No conversations yet. Find a poet and start a conversation.</div>'; return; }
+  list.innerHTML=data.map(item=>{
+    const pending=item.status==="pending";
+    const otherName=item.other_name||"Poet";
+    return `<article class="conversation-card">\n      <div class="conversation-meta">${pending?"Conversation request":"Conversation"} · ${escapeHTML(otherName)}</div>\n      <div class="conversation-title">${escapeHTML(otherName)}</div>\n      <div class="conversation-preview">${escapeHTML(item.latest_message||"No messages yet.")}</div>\n      <div class="conversation-actions">\n        ${pending && item.recipient_id===currentUser.id ? `<button class="primary" data-accept-request="${item.id}">ACCEPT</button><button data-decline-request="${item.id}">DECLINE</button>` : ""}\n        <button class="primary" data-open-conversation="${item.id}">${pending?"OPEN REQUEST":"OPEN CONVERSATION"}</button>\n      </div>\n    </article>`;
+  }).join("");
+  list.querySelectorAll("[data-accept-request]").forEach(b=>b.onclick=async()=>{const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{p_request_id:b.dataset.acceptRequest,p_action:"accept"}); if(error) alert(error.message); await renderConversations();});
+  list.querySelectorAll("[data-decline-request]").forEach(b=>b.onclick=async()=>{const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{p_request_id:b.dataset.declineRequest,p_action:"decline"}); if(error) alert(error.message); await renderConversations();});
+  list.querySelectorAll("[data-open-conversation]").forEach(b=>b.onclick=()=>openConversation(b.dataset.openConversation));
+}
+
+async function openConversation(requestId){
+  activeConversation=requestId;
+  const panel=document.getElementById("chatPanel");
+  if(!panel) return;
+  panel.style.display="block";
+  const {data,error}=await supabaseClient.rpc("get_poet_conversation",{p_request_id:requestId});
+  if(error){ alert(error.message||"Could not open conversation."); return; }
+  document.getElementById("chatTitle").textContent=data?.other_name||"Poet";
+  const pending=data?.status==="pending";
+  const mine=data?.requester_id===currentUser?.id;
+  document.getElementById("chatLimit").textContent=pending ? (mine ? `${data.preview_count||0}/2 preview messages sent · waiting for acceptance` : "Conversation request · accept to start talking") : "Messages disappear 24 hours after they are sent.";
+  await renderChatMessages(data?.messages||[]);
+  const canSend=!pending || (mine && (data.preview_count||0)<2);
+  document.getElementById("chatInput").disabled=!canSend;
+  document.getElementById("sendChat").disabled=!canSend;
+  document.getElementById("sendChat").dataset.requestId=requestId;
+  if(pending && !mine){
+    const actions=document.getElementById("chatMsg");
+    actions.textContent="Accept or decline this request from the conversations list.";
+  }else document.getElementById("chatMsg").textContent="";
+}
+
+async function renderChatMessages(messages){
+  const box=document.getElementById("chatMessages");
+  if(!box) return;
+  if(!messages?.length){
+    box.innerHTML='<div class="empty">No messages yet.</div>';
+    return;
+  }
+
+  const visible=messages.filter(m=>!m.is_unsent && m.message !== "Message unsent");
+
+  box.innerHTML=visible.map(m=>{
+    const mine=m.sender_id===currentUser.id;
+    return `<div class="chat-message ${mine?"mine":""}">
+      <div>${escapeHTML(m.message)}</div>
+      <span class="chat-time">${conversationTime(m.created_at)}</span>
+      ${mine ? `
+        <div class="chat-tools">
+          <button class="chat-tool" type="button" data-unsend-message="${escapeHTML(m.id)}">UNSEND</button>
+        </div>
+      ` : ""}
+    </div>`;
+  }).join("") || '<div class="empty">No messages yet.</div>';
+
+  box.querySelectorAll("[data-unsend-message]").forEach(button=>{
+    button.onclick=()=>unsendMessage(button.dataset.unsendMessage);
+  });
+
+  box.scrollTop=box.scrollHeight;
+}
+
+async function toggleMessageReaction(messageId,emoji){
+  if(!currentUser) return;
+  const {data:existing,error:findError}=await supabaseClient
+    .from("poet_message_reactions")
+    .select("message_id,user_id,emoji")
+    .eq("message_id",messageId)
+    .eq("user_id",currentUser.id)
+    .eq("emoji",emoji)
+    .maybeSingle();
+  if(findError){ alert(findError.message||"Could not update reaction."); return; }
+
+  if(existing){
+    const {error}=await supabaseClient
+      .from("poet_message_reactions")
+      .delete()
+      .eq("message_id",messageId)
+      .eq("user_id",currentUser.id)
+      .eq("emoji",emoji);
+    if(error){ alert(error.message||"Could not remove reaction."); return; }
+  }else{
+    const {error}=await supabaseClient
+      .from("poet_message_reactions")
+      .insert({message_id:messageId,user_id:currentUser.id,emoji});
+    if(error){ alert(error.message||"Could not add reaction."); return; }
+  }
+
+  if(activeConversation) await openConversation(activeConversation);
+}
+
+async function unsendMessage(messageId){
+  const {error}=await supabaseClient.rpc("unsend_poet_message",{p_message_id:messageId});
+  if(error){
+    alert(error.message||"Could not unsend message.");
+    return;
+  }
+  if(activeConversation) await openConversation(activeConversation);
+  await renderConversations();
+}
+
+async function sendChatMessage(){
+  const button=document.getElementById("sendChat"); const input=document.getElementById("chatInput"); const msg=document.getElementById("chatMsg");
+  const text=input.value.trim(); if(!text||!button.dataset.requestId) return;
+  button.disabled=true; msg.textContent="Sending...";
+  const {error}=await supabaseClient.rpc("send_poet_message",{p_request_id:button.dataset.requestId,p_message:text});
+  if(error){ msg.textContent=error.message||"Could not send message."; button.disabled=false; return; }
+  input.value=""; msg.textContent=""; await openConversation(button.dataset.requestId); await renderConversations();
+}
+
+function showDetail(poem, updateHash=true){
+  if(!poem) return;
+  const detail = document.getElementById("detailContent");
+  if(!detail) return;
+  detail.innerHTML = `
+    <div class="detail-meta">
+      <span>${escapeHTML(poem.genre || "Poetry")}</span>
+      <span>${escapeHTML(poem.author_name || poem.author || "Anonymous")}</span>
+    </div>
+    <h2>${escapeHTML(poem.title)}</h2>
+    <div class="detail-body">${escapeHTML(poem.body)}</div>
+    <div class="poem-actions" style="margin-top:35px">
+      <button class="poem-action" id="detailShare" type="button">↗ Share Poem</button>
+    </div>
+    <div class="share-status" id="shareStatus"></div>
+  `;
+  document.getElementById("detailShare")?.addEventListener("click", async () => {
+    await sharePoem(poem);
+  });
+  if(updateHash) location.hash = `poem=${encodeURIComponent(poem.id)}`;
+}
+
+async function managePoem(id, action){
+  if(!isAdmin){ alert("Admin access required."); return; }
+  const labels = { promote_weekly:"feature this poem in Dead Poets for 7 days", promote_permanent:"keep this poem permanently in the Dead Poets archive", remove:"demote this poem back to FLY", delete:"delete this poem" };
+  if(!confirm(`Are you sure you want to ${labels[action] || "update this poem"}?`)) return;
+  const { error } = await supabaseClient.rpc("admin_manage_poem", { p_poem_id:id, p_action:action });
+  if(error){
+    console.error(error);
+    alert(error.message || "Could not update the poem.");
+    return;
+  }
+  await loadPoems();
+}
+
+function attachAdminActions(){
+  document.querySelectorAll("[data-admin-action]").forEach(button => {
+    button.onclick = async event => {
+      event.preventDefault();
+      event.stopPropagation();
+      await managePoem(button.dataset.id, button.dataset.adminAction);
+    };
+  });
+}
+
+function route(){
+  const rawHash = (location.hash || "#home").slice(1) || "home";
+  if(rawHash.startsWith("poem=")){
+    const poemId = decodeURIComponent(rawHash.slice(5));
+    const poem = getPoems().find(item => item.id === poemId);
+    if(poem){
+      document.querySelectorAll("#site,.subpage").forEach(element => { element.style.display = "none"; });
+      const target = document.getElementById("detail");
+      if(target){
+        target.style.display = "block";
+        target.classList.add("visible");
+        showDetail(poem, false);
+        window.scrollTo(0,0);
+      }
+      return;
+    }
+  }
+  const page = rawHash;
+  document.querySelectorAll("#site,.subpage").forEach(element => {
+    element.style.display = "none";
+  });
+
+  if(page === "login"){
+    const target = document.getElementById("account");
+    if(target){
+      target.style.display = "block";
+      target.classList.add("visible");
+      setAccountMode("login");
+      window.scrollTo(0,0);
+    }
+    return;
+  }
+
+  if(["account","spread","detail","conversations"].includes(page)){
+    const target = document.getElementById(page);
+    if(target){
+      target.style.display = "block";
+      target.classList.add("visible");
+      window.scrollTo(0,0);
+      if(page === "account" && currentUser) updateAccountScreen(currentUser);
+      if(page === "conversations") renderConversations();
+    }
+    return;
+  }
+  const site = document.getElementById("site");
+  site.style.display = "block";
+  const target = document.getElementById(page) || document.getElementById("home");
+  if(target){
+    target.classList.add("visible");
+    if(page !== "home") target.scrollIntoView({behavior:"smooth"});
+  }
+}
+
+function setAccountMode(mode){
+  const createForm = document.getElementById("createAccountForm");
+  const loginForm = document.getElementById("loginForm");
+  const recoveryForm = document.getElementById("passwordRecoveryForm");
+  if(!createForm || !loginForm || !recoveryForm) return;
+
+  createForm.classList.toggle("hidden", mode !== "create");
+  loginForm.classList.toggle("hidden", mode !== "login");
+  recoveryForm.classList.toggle("hidden", mode !== "recovery");
+
+  const createMsg = document.getElementById("accountMsg");
+  const loginMsg = document.getElementById("loginMsg");
+  const recoveryMsg = document.getElementById("recoveryMsg");
+  if(createMsg) createMsg.textContent = "";
+  if(loginMsg) loginMsg.textContent = "";
+  if(recoveryMsg) recoveryMsg.textContent = "";
+}
+
+function renderProfilePoems(){
+  const container = document.getElementById("profilePoems");
+  const countEl = document.getElementById("profilePoemCount");
+  if(!container) return;
+
+  if(!currentUser){
+    container.innerHTML = `<div class="empty">Log in to see your poems.</div>`;
+    if(countEl) countEl.textContent = "00 poems";
+    return;
+  }
+
+  const poems = getPoems().filter(poem => poem.author_id === currentUser.id);
+  if(countEl){
+    countEl.textContent = `${String(poems.length).padStart(2,"0")} ${poems.length === 1 ? "poem" : "poems"}`;
+  }
+
+  if(!poems.length){
+    container.innerHTML = `<div class="empty">You haven't published a poem yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = poems.map(poem => `
+    <article class="profile-poem" data-profile-poem="${escapeHTML(poem.id)}">
+      <div class="profile-poem-meta">${escapeHTML(poem.genre || "Poetry")}</div>
+      <h3 class="profile-poem-title">${escapeHTML(poem.title)}</h3>
+      <div class="profile-poem-meta">${new Date(poem.created_at).toLocaleDateString()}</div>
+    </article>
+  `).join("");
+
+  container.querySelectorAll("[data-profile-poem]").forEach(card => {
+    card.onclick = () => {
+      const poem = poems.find(item => item.id === card.dataset.profilePoem);
+      if(poem) showDetail(poem);
+    };
+  });
+}
+
+function updateAccountScreen(user){
+  const createForm = document.getElementById("createAccountForm");
+  const loginForm = document.getElementById("loginForm");
+  const recoveryForm = document.getElementById("passwordRecoveryForm");
+  const welcome = document.getElementById("accountWelcome");
+
+  if(passwordRecoveryMode){
+    if(createForm) createForm.classList.add("hidden");
+    if(loginForm) loginForm.classList.add("hidden");
+    if(welcome) welcome.classList.remove("active");
+    if(recoveryForm) recoveryForm.classList.remove("hidden");
+    return;
+  }
+
+  if(!user){
+    if(welcome) welcome.classList.remove("active");
+    if(createForm) createForm.classList.remove("hidden");
+    if(loginForm) loginForm.classList.add("hidden");
+    renderProfilePoems();
+    return;
+  }
+
+  if(createForm) createForm.classList.add("hidden");
+  if(loginForm) loginForm.classList.add("hidden");
+  if(welcome) welcome.classList.add("active");
+
+  const metadata = user.user_metadata || {};
+  const name = metadata.name || metadata.pen_name || user.email?.split("@")[0] || "Poet";
+  const age = metadata.age || "";
+  const gender = metadata.gender || "";
+  const bio = metadata.bio || "";
+
+  const emailEl = document.getElementById("loggedInEmail");
+  const nameEl = document.getElementById("loggedInName");
+  const ageEl = document.getElementById("loggedInAge");
+  const genderEl = document.getElementById("loggedInGender");
+  const bioEl = document.getElementById("profileBio");
+  const joinedEl = document.getElementById("profileJoined");
+
+  if(emailEl) emailEl.textContent = user.email || "";
+  if(nameEl) nameEl.value = name;
+  if(ageEl) ageEl.value = age;
+  if(genderEl) genderEl.value = gender;
+  if(bioEl) bioEl.value = bio;
+  if(joinedEl && user.created_at){
+    joinedEl.textContent = `Joined ${new Date(user.created_at).toLocaleDateString(undefined,{month:"short",year:"numeric"})}`;
+  }
+
+  renderProfilePoems();
+  renderLibraryLists();
+}
+
+async function saveProfile(){
+  if(!currentUser) return;
+
+  const name = document.getElementById("loggedInName")?.value.trim() || "";
+  const ageValue = document.getElementById("loggedInAge")?.value || "";
+  const gender = document.getElementById("loggedInGender")?.value || null;
+  const bio = document.getElementById("profileBio")?.value.trim() || "";
+  const message = document.getElementById("profileMsg");
+
+  if(!name){
+    if(message) message.textContent = "Give yourself a name or pen name first.";
+    return;
+  }
+
+  if(ageValue && (Number(ageValue) < 1 || Number(ageValue) > 120)){
+    if(message) message.textContent = "Enter a valid age.";
+    return;
+  }
+
+  if(message) message.textContent = "Saving profile...";
+
+  const { data, error } = await supabaseClient.auth.updateUser({
+    data:{
+      name,
+      pen_name:name,
+      age: ageValue ? Number(ageValue) : null,
+      gender,
+      bio
+    }
+  });
+
+  if(error){
+    console.error(error);
+    if(message) message.textContent = error.message || "Could not save your profile.";
+    return;
+  }
+
+  currentUser = data?.user || currentUser;
+  if(message) message.textContent = "Profile saved.";
+  renderProfilePoems();
+  renderLibraryLists();
+  renderPoems(activeCategory);
+  renderDeadPoets();
+  renderDeadMore();
+}
+
+function updateAuthUI(user){
+  currentUser = user;
+  isAdmin = !!(user && ADMIN_EMAILS.includes((user.email || "").toLowerCase()));
+  if(!user){
+    likedPoemIds = new Set();
+    bookmarkedPoemIds = new Set();
+    likeCounts = {};
+    bookmarkCounts = {};
+  }
+  const saveButton = document.getElementById("save");
+  if(saveButton) saveButton.textContent = "Create Account";
+  updateAccountScreen(user);
+  renderPoems(activeCategory);
+  renderDeadPoets();
+  renderDeadMore();
+}
+
+async function initAuth(){
+  const { data, error } = await supabaseClient.auth.getSession();
+  if(error) console.error("Could not restore session:", error);
+  updateAuthUI(data?.session?.user || null);
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    updateAuthUI(session?.user || null);
+    loadInteractions().then(() => {
+      renderPoems(activeCategory);
+      renderDeadPoets();
+      renderDeadMore();
+      renderLibraryLists();
+    });
+
+    if(event === "PASSWORD_RECOVERY") {
+      passwordRecoveryMode=true;
+      updateAccountScreen(session?.user || null);
+      if(location.hash !== "#account") location.hash = "account";
+    }else if(event === "SIGNED_IN") {
+      passwordRecoveryMode=false;
+      if(location.hash !== "#account") location.hash = "account";
+    }
+  });
+}
+
+async function loginAccount(){
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const message = document.getElementById("loginMsg");
+
+  if(!email || !password){
+    message.textContent = "Enter your email and password.";
+    return;
+  }
+
+  message.textContent = "Logging in...";
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    console.error(error);
+    message.textContent = error.message || "Could not log in.";
+    return;
+  }
+
+  message.textContent = "";
+  document.getElementById("loginPassword").value = "";
+  updateAuthUI(data?.user || null);
+  location.hash = "account";
+}
+
+async function resetPassword(){
+  const email = document.getElementById("loginEmail").value.trim();
+  const message = document.getElementById("loginMsg");
+
+  if(!email){
+    message.textContent = "Enter your email first, then choose Forgot password.";
+    return;
+  }
+
+  message.textContent = "Sending password reset email...";
+
+  const redirectTo = `${window.location.origin}${window.location.pathname}#account`;
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo
+  });
+
+  if(error){
+    console.error(error);
+    message.textContent = error.message || "Could not send the reset email.";
+    return;
+  }
+
+  message.textContent = "Password reset email sent. Check your inbox.";
+}
+
+async function completePasswordReset(){
+  const password=document.getElementById("newPassword")?.value || "";
+  const confirmPassword=document.getElementById("confirmNewPassword")?.value || "";
+  const message=document.getElementById("recoveryMsg");
+
+  if(password.length < 6){
+    message.textContent="Password must be at least 6 characters.";
+    return;
+  }
+  if(password !== confirmPassword){
+    message.textContent="The passwords do not match.";
+    return;
+  }
+
+  message.textContent="Updating password...";
+  const {error}=await supabaseClient.auth.updateUser({password});
+  if(error){
+    console.error(error);
+    message.textContent=error.message || "Could not update your password.";
+    return;
+  }
+
+  document.getElementById("newPassword").value="";
+  document.getElementById("confirmNewPassword").value="";
+  passwordRecoveryMode=false;
+  message.textContent="Password updated. Welcome back.";
+  updateAccountScreen(currentUser);
+}
+
+async function logoutAccount(){
+  const message = document.getElementById("logoutMsg");
+  if(message) message.textContent = "Logging out...";
+
+  const { error } = await supabaseClient.auth.signOut();
+  if(error){
+    console.error(error);
+    if(message) message.textContent = error.message || "Could not log out.";
+    return;
+  }
+
+  currentUser = null;
+  isAdmin = false;
+  setAccountMode("login");
+  const email = document.getElementById("loginEmail");
+  const password = document.getElementById("loginPassword");
+  if(email) email.value = "";
+  if(password) password.value = "";
+  location.hash = "account";
+}
+
+async function publishPoem(){
+  const title = document.getElementById("title").value.trim();
+  const body = document.getElementById("text").value.trim();
+  const genre = document.getElementById("genre").value;
+  const message = document.getElementById("postMsg");
+  if(!currentUser){
+    message.textContent = "Create your account first, then let your poem fly.";
+    return;
+  }
+  if(!title || !body){
+    message.textContent = "Give your poem a title and some words first.";
+    return;
+  }
+  message.textContent = "Publishing...";
+  const authorName = currentUser.user_metadata?.name || currentUser.email?.split("@")[0] || "Anonymous";
+  const { error } = await supabaseClient.from("poems").insert({
+    author_id: currentUser.id,
+    author_name: authorName,
+    title,
+    body,
+    genre,
+    is_promoted:false,
+    is_deleted:false
+  });
+  if(error){
+    console.error(error);
+    message.textContent = error.message || "Could not publish the poem.";
+    return;
+  }
+  message.textContent = "";
+  document.getElementById("envelope").classList.add("show");
+  await loadPoems();
+  setTimeout(() => {
+    document.getElementById("envelope").classList.remove("show");
+    document.getElementById("title").value = "";
+    document.getElementById("text").value = "";
+    document.getElementById("count").textContent = "0";
+    location.hash = "fly";
+  },1800);
+}
+
+async function saveAccount(){
+  const name = document.getElementById("name").value.trim();
+  const age = document.getElementById("age").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const gender = document.getElementById("gender").value;
+  const message = document.getElementById("accountMsg");
+  if(!name || !age || !email || !password){
+    message.textContent = "Please fill the required fields.";
+    return;
+  }
+  if(password.length < 6){
+    message.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+  message.textContent = "Creating account...";
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options:{
+      data:{ name, pen_name:name, age:Number(age), gender:gender || null }
+    }
+  });
+  if(error){
+    console.error(error);
+    message.textContent = error.message || "Could not create account.";
+    return;
+  }
+  if(data?.session){
+    message.textContent = "Account created. Welcome between the lines.";
+    updateAuthUI(data.user);
+    location.hash = "account";
+  }else{
+    message.textContent = "Account created. Check your email to confirm your account.";
+  }
+}
+
+function initGenres(){
+  const select = document.getElementById("genre");
+  if(!select) return;
+  select.innerHTML = genres.map(g => `<option value="${escapeHTML(g)}">${escapeHTML(g)}</option>`).join("");
+}
+
+function initEvents(){
+  window.addEventListener("hashchange", route);
+  document.querySelectorAll("[data-home]").forEach(button => {
+    button.onclick = () => { location.hash = "home"; };
+  });
+  document.getElementById("publishFly")?.addEventListener("click", publishPoem);
+  document.getElementById("save")?.addEventListener("click", saveAccount);
+  document.getElementById("login")?.addEventListener("click", loginAccount);
+  document.getElementById("forgotPassword")?.addEventListener("click", resetPassword);
+  document.getElementById("updatePassword")?.addEventListener("click", completePasswordReset);
+  document.getElementById("logout")?.addEventListener("click", logoutAccount);
+  document.getElementById("saveProfile")?.addEventListener("click", saveProfile);
+  document.getElementById("sendChat")?.addEventListener("click", sendChatMessage);
+  document.getElementById("closeChat")?.addEventListener("click", () => { activeConversation=null; document.getElementById("chatPanel").style.display="none"; renderConversations(); });
+  document.getElementById("joinDeadPoets")?.addEventListener("click", joinDeadPoets);
+  document.getElementById("poemSearch")?.addEventListener("input", event => {
+    searchTerm = event.target.value || "";
+    renderPoems(activeCategory);
+  });
+  document.getElementById("clearSearch")?.addEventListener("click", () => {
+    const input = document.getElementById("poemSearch");
+    if(input) input.value = "";
+    searchTerm = "";
+    renderPoems(activeCategory);
+    input?.focus();
+  });
+  document.getElementById("showLogin")?.addEventListener("click", () => setAccountMode("login"));
+  document.getElementById("showCreate")?.addEventListener("click", () => setAccountMode("create"));
+  document.getElementById("more")?.addEventListener("click", () => {
+    location.hash = "fly";
+  });
+  const writingArea = document.getElementById("text");
+  const wordCounter = document.getElementById("count");
+  writingArea?.addEventListener("input", () => {
+    let words = writingArea.value.trim() ? writingArea.value.trim().split(/\\s+/) : [];
+    if(words.length > 3000){
+      writingArea.value = words.slice(0,3000).join(" ");
+    }
+    wordCounter.textContent = writingArea.value.trim() ? writingArea.value.trim().split(/\\s+/).length.toLocaleString() : "0";
+  });
+  document.getElementById("image")?.addEventListener("change", event => {
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      document.getElementById("avatar").innerHTML = `<img src="${reader.result}" alt="Profile">`;
+    };
+    reader.readAsDataURL(file);
+  });
+  window.addEventListener("scroll", () => {
+    document.getElementById("header")?.classList.toggle("scrolled", window.scrollY > 20);
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add("visible"); });
+  },{threshold:.1});
+  document.querySelectorAll(".fade").forEach(element => observer.observe(element));
+}
+
+(async function(){
+  try{
+    initGenres();
+    initEvents();
+    renderCategories();
+    route();
+    await initAuth();
+
+    // Supabase may return to this page after email confirmation or password recovery.
+    // Keep the user on Account instead of treating the auth hash as a normal page.
+    const authHash = window.location.hash;
+    if(authHash.includes("type=recovery")){
+      passwordRecoveryMode=true;
+      history.replaceState(null, "", `${window.location.pathname}#account`);
+      updateAccountScreen(currentUser);
+      route();
+    }else if(authHash.includes("access_token=") || authHash.includes("refresh_token=")){
+      history.replaceState(null, "", `${window.location.pathname}#account`);
+      route();
+    }
+
+    await loadPoems();
+    route();
+  }catch(error){
+    console.error("Between the Lines startup error:", error);
+    document.getElementById("site")?.style.setProperty("display","block");
+    document.getElementById("home")?.classList.add("visible");
+  }
+})();
+
+</script>
+
+</body>
+</html>
