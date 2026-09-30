@@ -1282,6 +1282,27 @@ textarea{
    RESPONSIVE
 ========================= */
 
+/* DEAD POETS PREMIUM PAGE */
+.dead-premium-page{background:#171613;color:#eee9df}
+.dead-premium-page .back{color:#eee9df;border-color:#eee9df}
+.dead-premium-page .subpage-title{font-family:Georgia,serif;font-weight:400}
+.dead-premium-intro{max-width:850px;margin-bottom:70px}
+.dead-premium-kicker{font-family:"Courier New",monospace;font-size:10px;text-transform:uppercase;color:#aaa49a;margin-bottom:25px}
+.dead-premium-intro p{max-width:600px;color:#aaa49a;line-height:1.7;font-family:Georgia,serif;font-size:18px}
+.dead-premium-rule{border-top:1px solid #4b4842;margin:35px 0}
+.dead-premium-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#4b4842;border:1px solid #4b4842}
+.dead-premium-card{background:#171613;padding:38px;min-height:430px;display:flex;flex-direction:column;justify-content:space-between;transition:.3s ease}
+.dead-premium-card:hover{background:#201f1b}
+.dead-premium-number{font-family:"Courier New",monospace;font-size:9px;color:#77736b}
+.dead-premium-mode{font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:#77736b;margin-top:8px}
+.dead-premium-card h3{font-family:Georgia,serif;font-weight:400;font-size:clamp(30px,4vw,52px);line-height:.98;letter-spacing:-.04em;margin:35px 0 20px}
+.dead-premium-card .premium-body{font-family:Georgia,serif;font-size:16px;line-height:1.75;color:#c9c3b8;white-space:pre-line;max-height:210px;overflow:hidden}
+.dead-premium-author{margin-top:25px;font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;color:#aaa49a}
+.dead-premium-card .poem-action{border-color:#4b4842;color:#eee9df}
+.dead-premium-card .poem-action:hover,.dead-premium-card .poem-action.active{background:#eee9df;color:#171613;border-color:#eee9df}
+.dead-premium-empty{padding:60px;border:1px solid #4b4842;font-family:"Courier New",monospace;font-size:10px;text-transform:uppercase;color:#77736b}
+@media(max-width:650px){.dead-premium-grid{grid-template-columns:1fr}.dead-premium-card{min-height:380px;padding:28px}}
+
 @media(max-width:850px){
 
   .poem-grid{
@@ -1493,11 +1514,15 @@ textarea{
   <div id="deadFeatured"></div>
 
   <div class="dead-archive-head">
-    <span>The Archive</span>
+    <span>The Archive / Featured</span>
     <span id="deadArchiveCount">00 poems</span>
   </div>
 
   <div class="dead-archive-grid" id="deadPoems"></div>
+
+  <div class="more-wrap" style="margin:35px 0 0;text-align:left;">
+    <button class="more-btn" id="moreDeadPoets" type="button">VIEW MORE →</button>
+  </div>
 
   <div id="deadMorePoems" style="margin-top:1px"></div>
 
@@ -2007,6 +2032,23 @@ textarea{
 
 
 <!-- =========================
+     DEAD POETS PREMIUM ARCHIVE
+========================= -->
+<section class="subpage fade dead-premium-page" id="dead-all">
+  <button class="back" data-home>← Back</button>
+  <div class="dead-premium-kicker">DEAD POETS / PREMIUM ARCHIVE</div>
+  <h1 class="subpage-title">THE VOICES<br>THAT REMAIN.</h1>
+  <div class="dead-premium-intro">
+    <p>A quieter collection for poems that have been chosen to remain. Every featured and permanent Dead Poets selection lives here, gathered in one place.</p>
+    <div class="dead-premium-rule"></div>
+    <div style="display:flex;justify-content:space-between;gap:20px;font-family:'Courier New',monospace;font-size:10px;text-transform:uppercase;color:#77736b;">
+      <span>Between the Lines / Dead Poets</span><span id="deadAllCount">00 POEMS</span>
+    </div>
+  </div>
+  <div class="dead-premium-grid" id="deadAllPoems"></div>
+</section>
+
+<!-- =========================
      POEM DETAIL PAGE
 ========================= -->
 
@@ -2153,6 +2195,7 @@ async function loadPoems(){
   renderFlyAll();
   renderDeadPoets();
   renderDeadMore();
+  renderDeadAll();
   renderConversations();
 }
 
@@ -2223,6 +2266,7 @@ async function togglePoemInteraction(poemId, type, button){
   renderPoems(activeCategory);
   renderDeadPoets();
   renderDeadMore();
+  renderDeadAll();
   renderLibraryLists();
 }
 
@@ -2450,51 +2494,35 @@ function deadCard(poem, index){
 }
 
 function renderDeadPoets(){
-  const container = document.getElementById("deadPoems");
-  const featured = document.getElementById("deadFeatured");
-  const count = document.getElementById("deadArchiveCount");
+  const container=document.getElementById("deadPoems"), featured=document.getElementById("deadFeatured"), count=document.getElementById("deadArchiveCount"), moreButton=document.getElementById("moreDeadPoets");
   if(!container) return;
-
-  const poems = activeDeadPoems();
-  if(count) count.textContent = `${String(poems.length).padStart(2,"0")} poems`;
-
-  if(!poems.length){
-    if(featured) featured.innerHTML = `<div class="dead-empty">No poems have entered the archive yet.</div>`;
-    container.innerHTML = "";
-    renderDeadMore();
-    return;
-  }
-
-  const featuredPoem = poems[0];
-  if(featured){
-    featured.innerHTML = `
-      <article class="dead-feature">
-        <div class="dead-feature-meta">Featured<br>Archive / 001<br>${escapeHTML(deadModeLabel(featuredPoem))}</div>
-        <div class="dead-feature-content">
-          <h4>${escapeHTML(featuredPoem.title)}</h4>
-          <div class="dead-feature-body">${escapeHTML(featuredPoem.body)}</div>
-          <div class="dead-author">— ${escapeHTML(featuredPoem.author_name || featuredPoem.author || "Anonymous")}</div>
-          <div class="dead-actions">
-            <button data-dead-feature-read="${escapeHTML(featuredPoem.id)}">Read poem</button>
-            <button data-share-poem="${escapeHTML(featuredPoem.id)}">↗ Share</button>
-            ${currentUser && featuredPoem.author_id && featuredPoem.author_id !== currentUser.id ? `<button data-talk-poet="${escapeHTML(featuredPoem.author_id)}" data-poet-name="${escapeHTML(featuredPoem.author_name || featuredPoem.author || "Poet")}">Talk to this poet</button>` : ""}
-          </div>
-        </div>
-      </article>`;
-  }
-
-  const archive = poems.slice(1,4);
-  container.innerHTML = archive.length ? archive.map((poem,index)=>deadCard(poem,index+1)).join("") : "";
+  const poems=activeDeadPoems();
+  if(count) count.textContent=`${String(poems.length).padStart(2,"0")} poems`;
+  if(!poems.length){ if(featured) featured.innerHTML=`<div class="dead-empty">No poems have entered the archive yet.</div>`; container.innerHTML=""; if(moreButton) moreButton.style.display="none"; return; }
+  const featuredPoem=poems[0];
+  if(featured) featured.innerHTML=`<article class="dead-feature"><div class="dead-feature-meta">Featured<br>Archive / 001<br>${escapeHTML(deadModeLabel(featuredPoem))}</div><div class="dead-feature-content"><h4>${escapeHTML(featuredPoem.title)}</h4><div class="dead-feature-body">${escapeHTML(featuredPoem.body)}</div><div class="dead-author">— ${escapeHTML(featuredPoem.author_name||featuredPoem.author||"Anonymous")}</div><div class="dead-actions"><button data-dead-feature-read="${escapeHTML(featuredPoem.id)}">Read poem</button><button data-share-poem="${escapeHTML(featuredPoem.id)}">↗ Share</button>${currentUser&&featuredPoem.author_id&&featuredPoem.author_id!==currentUser.id?`<button data-talk-poet="${escapeHTML(featuredPoem.author_id)}" data-poet-name="${escapeHTML(featuredPoem.author_name||featuredPoem.author||"Poet")}">Talk to this poet</button>`:""}</div></div></article>`;
+  const preview=poems.slice(1,4);
+  container.innerHTML=preview.map((poem,index)=>deadCard(poem,index+1)).join("");
+  if(moreButton) moreButton.style.display=poems.length>4?"inline-block":"none";
   attachDeadActions();
-  renderDeadMore();
 }
 
-function renderDeadMore(){
-  const container = document.getElementById("deadMorePoems");
-  if(!container) return;
-  const poems = activeDeadPoems().slice(4);
-  container.innerHTML = poems.length ? `<div class="dead-archive-grid">${poems.map((poem,index)=>deadCard(poem,index+4)).join("")}</div>` : "";
-  attachDeadActions();
+function renderDeadMore(){ const container=document.getElementById("deadMorePoems"); if(container) container.innerHTML=""; }
+
+function renderDeadAll(){
+  const container=document.getElementById("deadAllPoems"); if(!container) return;
+  const poems=activeDeadPoems(), count=document.getElementById("deadAllCount");
+  if(count) count.textContent=`${String(poems.length).padStart(2,"0")} POEMS`;
+  if(!poems.length){container.innerHTML=`<div class="dead-premium-empty">No poems have entered the Dead Poets archive yet.</div>`;return;}
+  container.innerHTML=poems.map((poem,index)=>`<article class="dead-premium-card"><div><div class="dead-premium-number">${String(index+1).padStart(3,"0")}</div><div class="dead-premium-mode">${escapeHTML(deadModeLabel(poem))}</div><h3>${escapeHTML(poem.title)}</h3><div class="premium-body">${escapeHTML(poem.body)}</div><div class="dead-premium-author">— ${escapeHTML(poem.author_name||poem.author||"Anonymous")}</div></div><div class="poem-actions"><button class="poem-action ${likedPoemIds.has(poem.id)?"active":""}" data-premium-interaction="like" data-id="${escapeHTML(poem.id)}" type="button">♥ Like ${likeCounts[poem.id]||0}</button><button class="poem-action ${bookmarkedPoemIds.has(poem.id)?"active":""}" data-premium-interaction="bookmark" data-id="${escapeHTML(poem.id)}" type="button">🔖 Save ${bookmarkCounts[poem.id]||0}</button><button class="poem-action" data-premium-share="${escapeHTML(poem.id)}" type="button">↗ Share</button>${currentUser&&poem.author_id&&poem.author_id!==currentUser.id?`<button class="poem-action" data-premium-talk="${escapeHTML(poem.author_id)}" data-poet-name="${escapeHTML(poem.author_name||poem.author||"Poet")}" type="button">TALK TO THIS POET</button>`:""}<button class="poem-action" data-premium-read="${escapeHTML(poem.id)}" type="button">READ →</button></div></article>`).join("");
+  attachDeadPremiumActions();
+}
+
+function attachDeadPremiumActions(){
+  document.querySelectorAll("#deadAllPoems [data-premium-interaction]").forEach(button=>button.onclick=async e=>{e.preventDefault();await togglePoemInteraction(button.dataset.id,button.dataset.premiumInteraction,button);});
+  document.querySelectorAll("#deadAllPoems [data-premium-share]").forEach(button=>button.onclick=async e=>{e.preventDefault();await sharePoemById(button.dataset.premiumShare);});
+  document.querySelectorAll("#deadAllPoems [data-premium-talk]").forEach(button=>button.onclick=e=>{e.preventDefault();openConversationRequest(button.dataset.premiumTalk,button.dataset.poetName||"Poet");});
+  document.querySelectorAll("#deadAllPoems [data-premium-read]").forEach(button=>button.onclick=()=>{const poem=getPoems().find(p=>p.id===button.dataset.premiumRead);if(poem)showDetail(poem);});
 }
 
 function attachDeadActions(){
@@ -2835,7 +2863,7 @@ function route(){
   }
 
   // Dedicated full-screen pages.
-  if(["account","spread","detail","conversations","fly-all"].includes(rawHash)){
+  if(["account","spread","detail","conversations","fly-all","dead-all"].includes(rawHash)){
     document.querySelectorAll("#site,.subpage").forEach(element => {
       element.style.display = "none";
     });
@@ -2848,6 +2876,7 @@ function route(){
       if(page === "account" && currentUser) updateAccountScreen(currentUser);
       if(page === "conversations") renderConversations();
       if(page === "fly-all") renderFlyAll();
+      if(page === "dead-all") renderDeadAll();
       window.scrollTo(0,0);
     }
     return;
@@ -3075,6 +3104,7 @@ function updateAuthUI(user){
   renderPoems(activeCategory);
   renderDeadPoets();
   renderDeadMore();
+  renderDeadAll();
 }
 
 async function initAuth(){
@@ -3088,6 +3118,7 @@ async function initAuth(){
       renderPoems(activeCategory);
       renderDeadPoets();
       renderDeadMore();
+      renderDeadAll();
       renderLibraryLists();
     });
 
@@ -3320,6 +3351,9 @@ function initEvents(){
   document.getElementById("showCreate")?.addEventListener("click", () => setAccountMode("create"));
   document.getElementById("more")?.addEventListener("click", () => {
     location.hash = "fly-all";
+  });
+  document.getElementById("moreDeadPoets")?.addEventListener("click", () => {
+    location.hash = "dead-all";
   });
   const writingArea = document.getElementById("text");
   const wordCounter = document.getElementById("count");
