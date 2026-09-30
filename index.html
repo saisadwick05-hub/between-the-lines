@@ -1397,8 +1397,6 @@ textarea{
 
     <a href="#conversations">Conversations</a>
 
-    <a href="#login">Login</a>
-
     <a href="#account">Account</a>
 
   </nav>
@@ -1752,7 +1750,7 @@ textarea{
   <div class="login-form hidden" id="loginForm">
     <h1 class="subpage-title">
       WELCOME<br>
-      BACK.
+      TO YOUR SPACE.
     </h1>
 
     <div class="form-layout">
@@ -2882,22 +2880,21 @@ function route(){
     return;
   }
 
+  // Legacy #login links now go to the Account page.
+  // Login is an Account state, not a separate page.
   if(rawHash === "login"){
-    document.querySelectorAll("#site,.subpage").forEach(element => {
-      element.style.display = "none";
-    });
-    const target = document.getElementById("account");
-    if(target){
-      target.style.display = "block";
-      target.classList.add("visible");
-      setAccountMode("login");
-      window.scrollTo(0,0);
-    }
+    history.replaceState(null, "", `${window.location.pathname}#account`);
+    route();
     return;
   }
 
   // Normal sections stay inside the main site.
-  // We only scroll to them; we do NOT hide the other sections.
+  // Hide every full-screen subpage before returning to Home or another
+  // normal section. This prevents Account/Login from remaining below Home.
+  document.querySelectorAll(".subpage").forEach(element => {
+    element.style.display = "none";
+  });
+
   const site = document.getElementById("site");
   if(site){
     site.style.display = "block";
@@ -3007,8 +3004,9 @@ function updateAccountScreen(user){
 
   if(!user){
     if(welcome) welcome.classList.remove("active");
-    if(createForm) createForm.classList.remove("hidden");
-    if(loginForm) loginForm.classList.add("hidden");
+    if(createForm) createForm.classList.add("hidden");
+    if(loginForm) loginForm.classList.remove("hidden");
+    if(recoveryForm) recoveryForm.classList.add("hidden");
     renderProfilePoems();
     return;
   }
@@ -3229,7 +3227,7 @@ async function logoutAccount(){
 
   currentUser = null;
   isAdmin = false;
-  setAccountMode("login");
+  updateAccountScreen(null);
   const email = document.getElementById("loginEmail");
   const password = document.getElementById("loginPassword");
   if(email) email.value = "";
