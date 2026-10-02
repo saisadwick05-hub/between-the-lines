@@ -532,32 +532,490 @@ main{
    CONVERSATIONS
 ========================= */
 
-.conversation-list{display:grid;gap:12px;max-width:850px;}
-.conversation-card{border:1px solid var(--line);padding:18px;background:transparent;}
-.conversation-card:hover{background:var(--soft);}
-.conversation-meta{font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.conversation-title{font-size:20px;font-weight:400;margin-bottom:8px;}
-.conversation-preview{font-family:Georgia,serif;line-height:1.6;color:#4d4a44;white-space:pre-line;}
-.conversation-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;}
-.conversation-actions button{border:1px solid var(--line);background:transparent;padding:9px 12px;font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;}
-.conversation-actions button:hover{border-color:var(--ink);}
-.conversation-actions .primary{background:var(--ink);color:var(--bg);border-color:var(--ink);}
-.chat-box{max-width:850px;border-top:1px solid var(--line);padding-top:25px;}
-.chat-messages{display:grid;gap:10px;max-height:480px;overflow:auto;margin-bottom:18px;}
-.chat-message{max-width:75%;padding:12px 14px;border:1px solid var(--line);white-space:pre-line;font-family:Georgia,serif;line-height:1.55;position:relative;}
-.chat-message.mine{margin-left:auto;background:var(--soft);}
-.chat-time{display:block;margin-top:7px;font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:var(--muted);}
-.chat-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:center;}
-.chat-tool,.reaction-btn{border:1px solid var(--line);background:transparent;padding:5px 7px;font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;cursor:pointer;}
-.chat-tool:hover,.reaction-btn:hover{border-color:var(--ink);}
-.chat-reactions{display:flex;gap:5px;flex-wrap:wrap;}
-.chat-reaction-menu{display:none;gap:4px;flex-wrap:wrap;}
-.chat-reaction-menu.open{display:flex;}
-.chat-reaction-count{font-family:"Courier New",monospace;font-size:10px;padding:4px 6px;border:1px solid var(--line);background:transparent;}
-.chat-unsent{font-style:italic;color:var(--muted);}
-.chat-compose{display:flex;gap:10px;align-items:end;}
-.chat-compose textarea{min-height:90px;flex:1;}
-.chat-limit{font-family:"Courier New",monospace;font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.conversation-shell{
+  width:100%;
+  max-width:1200px;
+}
+
+.conversation-layout{
+  display:grid;
+  grid-template-columns:320px minmax(0,1fr);
+  min-height:620px;
+  border:1px solid var(--line);
+  background:var(--bg);
+}
+
+.conversation-sidebar{
+  border-right:1px solid var(--line);
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.conversation-sidebar-head{
+  padding:22px;
+  border-bottom:1px solid var(--line);
+}
+
+.conversation-sidebar-title{
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--muted);
+  letter-spacing:.08em;
+}
+
+.conversation-request-list,
+.conversation-list{
+  display:grid;
+  gap:0;
+  max-width:none;
+}
+
+.conversation-list-section{
+  border-bottom:1px solid var(--line);
+}
+
+.conversation-list-section:last-child{
+  border-bottom:0;
+}
+
+.conversation-section-label{
+  padding:18px 22px 10px;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.conversation-card{
+  border:0;
+  border-top:1px solid var(--line);
+  padding:16px 20px;
+  background:transparent;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.conversation-card:hover,
+.conversation-card.active{
+  background:var(--soft);
+}
+
+.conversation-card-main{
+  min-width:0;
+}
+
+.conversation-meta{
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.conversation-title{
+  font-size:17px;
+  font-weight:400;
+  margin-bottom:5px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.conversation-preview{
+  font-family:Georgia,serif;
+  font-size:13px;
+  line-height:1.35;
+  color:#4d4a44;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.conversation-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.conversation-actions button{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:7px 9px;
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+}
+
+.conversation-actions button:hover{
+  border-color:var(--ink);
+}
+
+.conversation-actions .primary{
+  background:var(--ink);
+  color:var(--bg);
+  border-color:var(--ink);
+}
+
+.chat-box{
+  min-width:0;
+  min-height:620px;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  margin:0 !important;
+  padding:0 !important;
+  border:0;
+}
+
+.chat-header{
+  min-height:76px;
+  padding:18px 22px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+
+.chat-header-info{
+  min-width:0;
+}
+
+.chat-header-title{
+  font-size:22px;
+  font-weight:400;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.chat-header-meta{
+  margin-top:5px;
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.chat-header-actions{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+
+.chat-header-actions button{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:7px 9px;
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+}
+
+.chat-header-actions button:hover{
+  border-color:var(--ink);
+}
+
+.chat-messages{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  min-height:0;
+  max-height:none;
+  overflow:auto;
+  padding:22px;
+  margin:0;
+}
+
+.chat-message{
+  width:fit-content;
+  max-width:min(72%,520px);
+  padding:9px 12px 7px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  white-space:pre-line;
+  font-family:Georgia,serif;
+  font-size:14px;
+  line-height:1.42;
+  position:relative;
+  align-self:flex-start;
+  background:transparent;
+}
+
+.chat-message.mine{
+  margin-left:0;
+  align-self:flex-end;
+  background:var(--soft);
+}
+
+.chat-time{
+  display:block;
+  margin-top:4px;
+  font-family:"Courier New",monospace;
+  font-size:7px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-align:right;
+}
+
+.chat-tools{
+  display:flex;
+  justify-content:flex-end;
+  gap:6px;
+  margin-top:4px;
+}
+
+.chat-tool,
+.reaction-btn{
+  border:0;
+  background:transparent;
+  padding:2px 0;
+  font-family:"Courier New",monospace;
+  font-size:7px;
+  text-transform:uppercase;
+  color:var(--muted);
+  cursor:pointer;
+}
+
+.chat-tool:hover,
+.reaction-btn:hover{
+  color:var(--ink);
+}
+
+.chat-reactions{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.chat-reaction-menu{
+  display:none;
+  gap:4px;
+  flex-wrap:wrap;
+}
+
+.chat-reaction-menu.open{
+  display:flex;
+}
+
+.chat-reaction-count{
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  padding:3px 5px;
+  border:1px solid var(--line);
+  background:transparent;
+}
+
+.chat-unsent{
+  font-style:italic;
+  color:var(--muted);
+}
+
+.chat-compose-wrap{
+  border-top:1px solid var(--line);
+  padding:14px 18px 16px;
+}
+
+.chat-compose{
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+}
+
+.chat-compose textarea{
+  min-height:42px;
+  max-height:120px;
+  resize:none;
+  flex:1;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:11px 15px;
+  font-family:Georgia,serif;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.chat-compose .fly{
+  padding:11px 16px;
+  border-radius:20px;
+}
+
+.chat-limit{
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 8px 4px;
+}
+
+.chat-empty{
+  flex:1;
+  display:grid;
+  place-items:center;
+  padding:40px;
+  text-align:center;
+}
+
+.conversation-admin-area{
+  margin-top:45px;
+  border-top:1px solid var(--line);
+  padding-top:30px;
+}
+
+.dead-request-card{
+  border-bottom:1px solid var(--line);
+  padding:22px 0;
+}
+
+.dead-request-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+  margin-top:16px;
+}
+
+.dead-request-label{
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.dead-request-content{
+  font-family:Georgia,serif;
+  line-height:1.65;
+  white-space:pre-line;
+}
+
+.dead-request-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.dead-request-actions button{
+  border:1px solid var(--line);
+  background:transparent;
+  padding:9px 12px;
+  font-family:"Courier New",monospace;
+  font-size:8px;
+  text-transform:uppercase;
+}
+
+.dead-request-actions .accept{
+  background:var(--ink);
+  color:var(--bg);
+  border-color:var(--ink);
+}
+
+.dead-request-actions .decline{
+  color:#8a3027;
+  border-color:#8a3027;
+}
+
+.dead-letter-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:90;
+  background:rgba(238,233,223,.96);
+  backdrop-filter:blur(10px);
+  overflow:auto;
+  padding:100px 5vw 60px;
+}
+
+.dead-letter-overlay.show{
+  display:block;
+}
+
+.dead-letter{
+  max-width:760px;
+  margin:0 auto;
+  border:1px solid var(--line);
+  background:var(--soft);
+  padding:40px;
+}
+
+.dead-letter-kicker{
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+
+.dead-letter h2{
+  font-family:Georgia,serif;
+  font-size:clamp(42px,7vw,80px);
+  line-height:.9;
+  font-weight:400;
+  letter-spacing:-.06em;
+  margin-bottom:35px;
+}
+
+.dead-letter .field{
+  margin-bottom:24px;
+}
+
+.dead-letter textarea{
+  min-height:150px;
+  font-family:Georgia,serif;
+}
+
+.dead-letter .poem-field{
+  min-height:260px;
+}
+
+.dead-letter-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-top:25px;
+}
+
+@media(max-width:850px){
+  .conversation-layout{
+    grid-template-columns:280px minmax(0,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .conversation-layout{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+
+  .conversation-sidebar{
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    max-height:330px;
+    overflow:auto;
+  }
+
+  .chat-box{
+    min-height:600px;
+  }
+
+  .chat-message{
+    max-width:84%;
+  }
+
+  .dead-request-grid{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .dead-letter{
+    padding:25px;
+  }
+}
 
 /* =========================
    DEAD POETS
@@ -1996,19 +2454,75 @@ textarea{
 <section class="subpage fade" id="conversations">
   <button class="back" data-home>← Back</button>
   <h1 class="subpage-title">POET<br>CONVERSATIONS.</h1>
-  <div class="form-layout">
-    <p class="account-note" style="font-family:'Courier New',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:35px;">Poems stay. Conversations fade.</p>
-    <div id="conversationList" class="conversation-list"><div class="empty">Loading conversations...</div></div>
-    <div id="chatPanel" class="chat-box" style="display:none;margin-top:40px;">
-      <button class="back" id="closeChat" type="button">← Back to conversations</button>
-      <div id="chatTitle" class="conversation-title"></div>
-      <div id="chatLimit" class="chat-limit"></div>
-      <div id="chatMessages" class="chat-messages"></div>
-      <div class="chat-compose">
-        <textarea id="chatInput" maxlength="2000" placeholder="Write something between the lines..."></textarea>
-        <button class="fly" id="sendChat" type="button">SEND →</button>
+
+  <div class="conversation-shell">
+    <p class="account-note" style="font-family:'Courier New',monospace;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:35px;">
+      Poems stay. Conversations fade.
+    </p>
+
+    <div class="conversation-layout">
+      <aside class="conversation-sidebar">
+        <div class="conversation-sidebar-head">
+          <div class="conversation-sidebar-title">Your conversations</div>
+        </div>
+
+        <div class="conversation-list-section">
+          <div class="conversation-section-label">Requests</div>
+          <div id="conversationRequests" class="conversation-request-list">
+            <div class="empty">No requests.</div>
+          </div>
+        </div>
+
+        <div class="conversation-list-section">
+          <div class="conversation-section-label">Conversations</div>
+          <div id="conversationList" class="conversation-list">
+            <div class="empty">Loading conversations...</div>
+          </div>
+        </div>
+      </aside>
+
+      <div id="chatPanel" class="chat-box">
+        <div id="chatEmptyState" class="chat-empty">
+          <div>
+            <div class="eyebrow">Between the Lines</div>
+            <p style="font-family:Georgia,serif;font-size:24px;line-height:1.2;margin-top:15px;">
+              Choose a poet<br>to open the conversation.
+            </p>
+          </div>
+        </div>
+
+        <div id="chatContent" style="display:none;min-height:100%;height:100%;flex-direction:column;">
+          <div class="chat-header">
+            <div class="chat-header-info">
+              <div id="chatTitle" class="chat-header-title">Poet</div>
+              <div id="chatLimit" class="chat-header-meta"></div>
+            </div>
+            <div class="chat-header-actions">
+              <button id="deleteConversation" type="button">Delete</button>
+            </div>
+          </div>
+
+          <div id="chatMessages" class="chat-messages"></div>
+
+          <div class="chat-compose-wrap">
+            <div id="chatMsg" class="error" style="margin-bottom:6px;"></div>
+            <div class="chat-compose">
+              <textarea id="chatInput" maxlength="2000" rows="1" placeholder="Write something between the lines..."></textarea>
+              <button class="fly" id="sendChat" type="button">SEND →</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <p class="error" id="chatMsg"></p>
+    </div>
+
+    <div id="deadPoetAdminArea" class="conversation-admin-area" style="display:none;">
+      <div class="section-head" style="margin-bottom:0;">
+        <h2 style="font-size:clamp(32px,4vw,55px);">Dead Poet<br>Requests</h2>
+        <span class="number">ADMIN</span>
+      </div>
+      <div id="deadPoetRequests">
+        <div class="empty">Loading requests...</div>
+      </div>
     </div>
   </div>
 </section>
@@ -2072,6 +2586,36 @@ textarea{
 
 </section>
 
+
+<!-- DEAD POETS LETTER -->
+<div class="dead-letter-overlay" id="deadLetterOverlay">
+  <div class="dead-letter">
+    <div class="dead-letter-kicker">Dead Poets / A letter to the archive</div>
+    <h2>JOIN THE<br>DEAD POETS.</h2>
+
+    <div class="field">
+      <label>Your name / pen name</label>
+      <input id="deadApplicantName" type="text" maxlength="120" placeholder="The name you write under">
+    </div>
+
+    <div class="field">
+      <label>Your poem</label>
+      <textarea id="deadApplicantPoem" class="poem-field" maxlength="12000" placeholder="Place the poem you want the archive to read here..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Your message to the admin</label>
+      <textarea id="deadApplicantMessage" maxlength="3000" placeholder="Tell the archive why this poem should be considered..."></textarea>
+    </div>
+
+    <div class="dead-letter-actions">
+      <button class="back" id="closeDeadLetter" type="button" style="margin:0;">← Close</button>
+      <button class="fly" id="sendDeadLetter" type="button">SEND LETTER →</button>
+    </div>
+
+    <p class="error" id="deadLetterMsg" style="margin-top:14px;"></p>
+  </div>
+</div>
 
 <!-- ENVELOPE -->
 
@@ -2597,39 +3141,155 @@ function conversationTime(value){
   return d.toLocaleString(undefined,{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
 }
 
-async function joinDeadPoets(){
+function openDeadPoetLetter(){
   if(!currentUser){
     location.hash="account";
     return;
   }
 
-  if(currentUser.id === DEAD_POETS_ADMIN_ID){
-    location.hash="conversations";
+  const overlay=document.getElementById("deadLetterOverlay");
+  if(!overlay) return;
+
+  const metadata=currentUser.user_metadata||{};
+  document.getElementById("deadApplicantName").value =
+    metadata.name || metadata.pen_name || currentUser.email?.split("@")[0] || "";
+
+  document.getElementById("deadApplicantPoem").value="";
+  document.getElementById("deadApplicantMessage").value="";
+  document.getElementById("deadLetterMsg").textContent="";
+  overlay.classList.add("show");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>document.getElementById("deadApplicantPoem")?.focus(),50);
+}
+
+function closeDeadPoetLetter(){
+  const overlay=document.getElementById("deadLetterOverlay");
+  if(overlay) overlay.classList.remove("show");
+  document.body.style.overflow="";
+}
+
+async function submitDeadPoetLetter(){
+  if(!currentUser) return;
+
+  const name=document.getElementById("deadApplicantName").value.trim();
+  const poem=document.getElementById("deadApplicantPoem").value.trim();
+  const message=document.getElementById("deadApplicantMessage").value.trim();
+  const status=document.getElementById("deadLetterMsg");
+  const button=document.getElementById("sendDeadLetter");
+
+  if(!name || !poem || !message){
+    status.textContent="Please complete your name, poem, and message.";
     return;
   }
 
-  const message = "I wanna promote my poem into Dead Poets.";
+  button.disabled=true;
+  status.textContent="Sending your letter...";
 
-  const {data,error}=await supabaseClient.rpc(
-    "create_poet_conversation_request",
-    {
-      p_recipient_id: DEAD_POETS_ADMIN_ID,
-      p_message: message
-    }
-  );
+  const {error}=await supabaseClient.from("dead_poet_applications").insert({
+    applicant_id:currentUser.id,
+    applicant_name:name,
+    poem:poem,
+    message:message,
+    status:"pending"
+  });
+
+  button.disabled=false;
 
   if(error){
     console.error(error);
-    alert(error.message || "Could not start the Dead Poets request.");
+    status.textContent=error.message||"Could not send your letter.";
     return;
   }
 
-  location.hash="conversations";
-  await renderConversations();
+  status.textContent="Your letter has been sent to the Dead Poets admin.";
+  setTimeout(closeDeadPoetLetter,1200);
+}
 
-  if(data?.request_id){
-    openConversation(data.request_id);
+async function joinDeadPoets(){
+  openDeadPoetLetter();
+}
+
+async function renderDeadPoetAdminRequests(){
+  const area=document.getElementById("deadPoetAdminArea");
+  const container=document.getElementById("deadPoetRequests");
+  if(!area || !container) return;
+
+  if(!isAdmin){
+    area.style.display="none";
+    return;
   }
+
+  area.style.display="block";
+
+  const {data,error}=await supabaseClient
+    .from("dead_poet_applications")
+    .select("id,applicant_id,applicant_name,poem,message,status,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    container.innerHTML=`<div class="empty">${escapeHTML(error.message||"Could not load Dead Poets requests.")}</div>`;
+    return;
+  }
+
+  const rows=data||[];
+
+  if(!rows.length){
+    container.innerHTML='<div class="empty">No Dead Poets letters yet.</div>';
+    return;
+  }
+
+  container.innerHTML=rows.map(item=>`
+    <article class="dead-request-card">
+      <div class="conversation-meta">${escapeHTML(item.status||"pending")} · ${new Date(item.created_at).toLocaleDateString()}</div>
+      <div class="conversation-title">${escapeHTML(item.applicant_name||"Poet")}</div>
+
+      <div class="dead-request-grid">
+        <div>
+          <div class="dead-request-label">Poem</div>
+          <div class="dead-request-content">${escapeHTML(item.poem||"")}</div>
+        </div>
+        <div>
+          <div class="dead-request-label">Message to admin</div>
+          <div class="dead-request-content">${escapeHTML(item.message||"")}</div>
+        </div>
+      </div>
+
+      ${item.status==="pending" ? `
+        <div class="dead-request-actions">
+          <button class="accept" data-dead-request-action="accepted" data-dead-request-id="${escapeHTML(item.id)}">ACCEPT</button>
+          <button class="decline" data-dead-request-action="declined" data-dead-request-id="${escapeHTML(item.id)}">DECLINE</button>
+        </div>
+      ` : ""}
+    </article>
+  `).join("");
+
+  container.querySelectorAll("[data-dead-request-action]").forEach(button=>{
+    button.onclick=()=>respondDeadPoetApplication(
+      button.dataset.deadRequestId,
+      button.dataset.deadRequestAction
+    );
+  });
+}
+
+async function respondDeadPoetApplication(id,status){
+  if(!isAdmin || !id) return;
+
+  const label=status==="accepted" ? "accept this Dead Poets letter" : "decline this Dead Poets letter";
+  if(!confirm(`Are you sure you want to ${label}?`)) return;
+
+  const {error}=await supabaseClient
+    .from("dead_poet_applications")
+    .update({status})
+    .eq("id",id);
+
+  if(error){
+    console.error(error);
+    alert(error.message||"Could not update the request.");
+    return;
+  }
+
+  await renderDeadPoetAdminRequests();
 }
 
 async function openConversationRequest(recipientId, poetName){
@@ -2676,73 +3336,244 @@ async function openConversationRequest(recipientId, poetName){
   if(data?.request_id) openConversation(data.request_id);
 }
 
+function conversationOtherId(item){
+  return item.requester_id === currentUser?.id ? item.recipient_id : item.requester_id;
+}
+
+// Resolve the other poet from their published poem author name instead of
+// trusting the RPC's other_name field, which can incorrectly return our own name.
+async function resolveConversationOtherName(item){
+  const otherId=conversationOtherId(item);
+  const ownNames=new Set([
+    currentUser?.user_metadata?.author_name,
+    currentUser?.user_metadata?.pen_name,
+    currentUser?.user_metadata?.full_name,
+    currentUser?.email
+  ].filter(Boolean).map(value=>String(value).trim().toLowerCase()));
+  const {data,error}=await supabaseClient.from("poems")
+    .select("author_id,author_name,created_at")
+    .eq("author_id",otherId)
+    .order("created_at",{ascending:false})
+    .limit(1);
+  if(!error && data?.[0]?.author_name){
+    const name=String(data[0].author_name).trim();
+    if(name && !ownNames.has(name.toLowerCase())) return name;
+  }
+  const rpcName=String(item.other_name||"").trim();
+  if(rpcName && !ownNames.has(rpcName.toLowerCase())) return rpcName;
+  return "Poet";
+}
+
+async function renderConversationCard(item, pending=false){
+  const otherName=await resolveConversationOtherName(item);
+  const isIncomingPending=pending && item.recipient_id===currentUser?.id;
+  return `<article class="conversation-card ${activeConversation===item.id?"active":""}" data-open-conversation="${escapeHTML(item.id)}">
+    <div class="conversation-card-main">
+      <div class="conversation-meta">${pending?"Request":"Conversation"}</div>
+      <div class="conversation-title">${escapeHTML(otherName)}</div>
+      <div class="conversation-preview">${escapeHTML(item.latest_message||"No messages yet.")}</div>
+      ${isIncomingPending ? `<div class="conversation-actions">
+        <button class="primary" data-accept-request="${escapeHTML(item.id)}" type="button">ACCEPT</button>
+        <button data-decline-request="${escapeHTML(item.id)}" type="button">DECLINE</button>
+      </div>` : ""}
+    </div>
+  </article>`;
+}
+
 async function renderConversations(){
   const list=document.getElementById("conversationList");
-  if(!list) return;
-  if(!currentUser){ list.innerHTML='<div class="empty">Log in to see your conversations.</div>'; return; }
+  const requests=document.getElementById("conversationRequests");
+  if(!list || !requests) return;
+
+  if(!currentUser){
+    list.innerHTML='<div class="empty">Log in to see your conversations.</div>';
+    requests.innerHTML='<div class="empty">Log in to see requests.</div>';
+    return;
+  }
+
   const {data,error}=await supabaseClient.rpc("get_my_poet_conversations");
-  if(error){ console.error(error); list.innerHTML=`<div class="empty">${escapeHTML(error.message||"Could not load conversations.")}</div>`; return; }
-  if(!data?.length){ list.innerHTML='<div class="empty">No conversations yet. Find a poet and start a conversation.</div>'; return; }
-  list.innerHTML=data.map(item=>{
-    const pending=item.status==="pending";
-    const otherName=item.other_name||"Poet";
-    return `<article class="conversation-card">\n      <div class="conversation-meta">${pending?"Conversation request":"Conversation"} · ${escapeHTML(otherName)}</div>\n      <div class="conversation-title">${escapeHTML(otherName)}</div>\n      <div class="conversation-preview">${escapeHTML(item.latest_message||"No messages yet.")}</div>\n      <div class="conversation-actions">\n        ${pending && item.recipient_id===currentUser.id ? `<button class="primary" data-accept-request="${item.id}">ACCEPT</button><button data-decline-request="${item.id}">DECLINE</button>` : ""}\n        <button class="primary" data-open-conversation="${item.id}">${pending?"OPEN REQUEST":"OPEN CONVERSATION"}</button>\n      </div>\n    </article>`;
-  }).join("");
-  list.querySelectorAll("[data-accept-request]").forEach(b=>b.onclick=async()=>{const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{p_request_id:b.dataset.acceptRequest,p_action:"accept"}); if(error) alert(error.message); await renderConversations();});
-  list.querySelectorAll("[data-decline-request]").forEach(b=>b.onclick=async()=>{const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{p_request_id:b.dataset.declineRequest,p_action:"decline"}); if(error) alert(error.message); await renderConversations();});
-  list.querySelectorAll("[data-open-conversation]").forEach(b=>b.onclick=()=>openConversation(b.dataset.openConversation));
+  if(error){
+    console.error(error);
+    list.innerHTML=`<div class="empty">${escapeHTML(error.message||"Could not load conversations.")}</div>`;
+    requests.innerHTML='<div class="empty">Could not load requests.</div>';
+    return;
+  }
+
+  const rows=data||[];
+  const incoming=rows.filter(item=>item.status==="pending" && item.recipient_id===currentUser.id);
+  const outgoing=rows.filter(item=>item.status==="pending" && item.requester_id===currentUser.id);
+  const accepted=rows.filter(item=>item.status==="accepted");
+
+  requests.innerHTML = incoming.length
+    ? (await Promise.all(incoming.map(item=>renderConversationCard(item,true)))).join("")
+    : (outgoing.length
+      ? (await Promise.all(outgoing.map(async item=>`<article class="conversation-card" data-open-conversation="${escapeHTML(item.id)}">
+          <div class="conversation-meta">Request sent</div>
+          <div class="conversation-title">${escapeHTML(await resolveConversationOtherName(item))}</div>
+          <div class="conversation-preview">Waiting for acceptance...</div>
+        </article>`))).join("")
+      : '<div class="empty">No pending requests.</div>');
+
+  list.innerHTML = accepted.length
+    ? (await Promise.all(accepted.map(item=>renderConversationCard(item,false)))).join("")
+    : '<div class="empty">No accepted conversations yet.</div>';
+
+  document.querySelectorAll("#conversationList [data-open-conversation],#conversationRequests [data-open-conversation]").forEach(card=>{
+    card.onclick=event=>{
+      if(event.target.closest("[data-accept-request],[data-decline-request]")) return;
+      openConversation(card.dataset.openConversation);
+    };
+  });
+
+  requests.querySelectorAll("[data-accept-request]").forEach(button=>{
+    button.onclick=async event=>{
+      event.stopPropagation();
+      const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{
+        p_request_id:button.dataset.acceptRequest,
+        p_action:"accept"
+      });
+      if(error) alert(error.message||"Could not accept request.");
+      await renderConversations();
+    };
+  });
+
+  requests.querySelectorAll("[data-decline-request]").forEach(button=>{
+    button.onclick=async event=>{
+      event.stopPropagation();
+      const {error}=await supabaseClient.rpc("respond_poet_conversation_request",{
+        p_request_id:button.dataset.declineRequest,
+        p_action:"decline"
+      });
+      if(error) alert(error.message||"Could not decline request.");
+      await renderConversations();
+    };
+  });
+
+  if(activeConversation && rows.some(item=>item.id===activeConversation)){
+    await openConversation(activeConversation);
+  }
 }
 
 async function openConversation(requestId){
   activeConversation=requestId;
-  const panel=document.getElementById("chatPanel");
-  if(!panel) return;
-  panel.style.display="block";
+
+  const emptyState=document.getElementById("chatEmptyState");
+  const content=document.getElementById("chatContent");
+  if(emptyState) emptyState.style.display="none";
+  if(content) content.style.display="flex";
+
   const {data,error}=await supabaseClient.rpc("get_poet_conversation",{p_request_id:requestId});
-  if(error){ alert(error.message||"Could not open conversation."); return; }
-  document.getElementById("chatTitle").textContent=data?.other_name||"Poet";
+  if(error){
+    alert(error.message||"Could not open conversation.");
+    return;
+  }
+
+  const row=(await supabaseClient.rpc("get_my_poet_conversations"))?.data?.find(item=>item.id===requestId);
+  document.getElementById("chatTitle").textContent=await resolveConversationOtherName({
+    ...(row||data||{}),
+    requester_id:(row||data||{}).requester_id,
+    recipient_id:(row||data||{}).recipient_id,
+    other_name:data?.other_name||row?.other_name
+  });
+
   const pending=data?.status==="pending";
   const mine=data?.requester_id===currentUser?.id;
-  document.getElementById("chatLimit").textContent=pending ? (mine ? `${data.preview_count||0}/2 preview messages sent · waiting for acceptance` : "Conversation request · accept to start talking") : "Messages disappear 24 hours after they are sent.";
+
+  document.getElementById("chatLimit").textContent=
+    pending
+      ? (mine
+        ? `${data.preview_count||0}/2 preview messages sent · waiting for acceptance`
+        : "Conversation request · accept to start talking")
+      : "Messages disappear 24 hours after they are sent.";
+
   await renderChatMessages(data?.messages||[]);
+
   const canSend=!pending || (mine && (data.preview_count||0)<2);
-  document.getElementById("chatInput").disabled=!canSend;
-  document.getElementById("sendChat").disabled=!canSend;
-  document.getElementById("sendChat").dataset.requestId=requestId;
+  const input=document.getElementById("chatInput");
+  const send=document.getElementById("sendChat");
+
+  input.disabled=!canSend;
+  send.disabled=!canSend;
+  send.dataset.requestId=requestId;
+
+  const deleteButton=document.getElementById("deleteConversation");
+  deleteButton.disabled=false;
+  deleteButton.dataset.requestId=requestId;
+
   if(pending && !mine){
-    const actions=document.getElementById("chatMsg");
-    actions.textContent="Accept or decline this request from the conversations list.";
-  }else document.getElementById("chatMsg").textContent="";
+    document.getElementById("chatMsg").textContent="Accept or decline this request from the Requests section.";
+  }else{
+    document.getElementById("chatMsg").textContent="";
+  }
+
+  document.querySelectorAll(".conversation-card").forEach(card=>{
+    card.classList.toggle("active",card.dataset.openConversation===String(requestId));
+  });
 }
 
 async function renderChatMessages(messages){
   const box=document.getElementById("chatMessages");
   if(!box) return;
-  if(!messages?.length){
-    box.innerHTML='<div class="empty">No messages yet.</div>';
+
+  const visible=(messages||[]).filter(m=>!m.is_unsent && m.message!=="Message unsent");
+
+  if(!visible.length){
+    box.innerHTML='<div class="chat-empty"><div class="eyebrow">No messages yet</div><div style="font-family:Georgia,serif;font-size:20px;margin-top:10px;">Let the first line arrive.</div></div>';
     return;
   }
-
-  const visible=messages.filter(m=>!m.is_unsent && m.message !== "Message unsent");
 
   box.innerHTML=visible.map(m=>{
     const mine=m.sender_id===currentUser.id;
     return `<div class="chat-message ${mine?"mine":""}">
       <div>${escapeHTML(m.message)}</div>
       <span class="chat-time">${conversationTime(m.created_at)}</span>
-      ${mine ? `
-        <div class="chat-tools">
-          <button class="chat-tool" type="button" data-unsend-message="${escapeHTML(m.id)}">UNSEND</button>
-        </div>
-      ` : ""}
+      ${mine ? `<div class="chat-tools"><button class="chat-tool" type="button" data-unsend-message="${escapeHTML(m.id)}">UNSEND</button></div>` : ""}
     </div>`;
-  }).join("") || '<div class="empty">No messages yet.</div>';
+  }).join("");
 
   box.querySelectorAll("[data-unsend-message]").forEach(button=>{
     button.onclick=()=>unsendMessage(button.dataset.unsendMessage);
   });
 
   box.scrollTop=box.scrollHeight;
+}
+
+async function deleteConversation(requestId){
+  if(!currentUser || !requestId) return;
+
+  const button = document.getElementById("deleteConversation");
+  const message = document.getElementById("chatMsg");
+  if(button){ button.disabled = true; button.textContent = "DELETING…"; }
+  if(message) message.textContent = "";
+
+  try {
+    const { error } = await supabaseClient.rpc(
+      "delete_poet_conversation",
+      { p_request_id: requestId }
+    );
+
+    if(error) throw error;
+
+    // Clear the selected chat and reload the sidebar after the database confirms deletion.
+    activeConversation = null;
+    const content = document.getElementById("chatContent");
+    const emptyState = document.getElementById("chatEmptyState");
+    if(content) content.style.display = "none";
+    if(emptyState) emptyState.style.display = "grid";
+
+    const title = document.getElementById("chatTitle");
+    const messages = document.getElementById("chatMessages");
+    if(title) title.textContent = "";
+    if(messages) messages.innerHTML = "";
+
+    await renderConversations();
+  } catch(error) {
+    console.error("Could not delete conversation:", error);
+    // No browser popup: show the database error inside the chat instead.
+    if(message) message.textContent = error?.message || "Could not delete this conversation. Check the delete_poet_conversation SQL function.";
+  } finally {
+    if(button){ button.disabled = false; button.textContent = "DELETE"; }
+  }
 }
 
 async function toggleMessageReaction(messageId,emoji){
@@ -2872,7 +3703,7 @@ function route(){
       target.style.display = "block";
       target.classList.add("visible");
       if(page === "account" && currentUser) updateAccountScreen(currentUser);
-      if(page === "conversations") renderConversations();
+      if(page === "conversations"){ renderConversations(); renderDeadPoetAdminRequests(); }
       if(page === "fly-all") renderFlyAll();
       if(page === "dead-all") renderDeadAll();
       window.scrollTo(0,0);
@@ -3103,6 +3934,7 @@ function updateAuthUI(user){
   renderDeadPoets();
   renderDeadMore();
   renderDeadAll();
+  renderDeadPoetAdminRequests();
 }
 
 async function initAuth(){
@@ -3332,8 +4164,13 @@ function initEvents(){
   document.getElementById("logout")?.addEventListener("click", logoutAccount);
   document.getElementById("saveProfile")?.addEventListener("click", saveProfile);
   document.getElementById("sendChat")?.addEventListener("click", sendChatMessage);
-  document.getElementById("closeChat")?.addEventListener("click", () => { activeConversation=null; document.getElementById("chatPanel").style.display="none"; renderConversations(); });
+  document.getElementById("deleteConversation")?.addEventListener("click", () => {
+    const id=document.getElementById("deleteConversation")?.dataset.requestId;
+    if(id) deleteConversation(id);
+  });
   document.getElementById("joinDeadPoets")?.addEventListener("click", joinDeadPoets);
+  document.getElementById("closeDeadLetter")?.addEventListener("click", closeDeadPoetLetter);
+  document.getElementById("sendDeadLetter")?.addEventListener("click", submitDeadPoetLetter);
   document.getElementById("poemSearch")?.addEventListener("input", event => {
     searchTerm = event.target.value || "";
     renderPoems(activeCategory);
