@@ -10,8 +10,8 @@
 :root{
   --bg:#eee9df;
   --ink:#171613;
-  --muted:#77736b;
-  --line:#c9c3b8;
+  --muted:#5f5b54;
+  --line:#bdb6aa;
   --soft:#f5f0e7;
 }
 
@@ -92,7 +92,7 @@ nav{
 }
 
 nav a{
-  opacity:.65;
+  opacity:.82;
   transition:.25s;
 }
 
@@ -299,6 +299,7 @@ main{
 
 .cat{
   white-space:nowrap;
+  color:var(--ink);
 
   border:1px solid var(--line);
   background:transparent;
@@ -355,7 +356,7 @@ main{
   background:#e9e3d8;
 }
 
-.meta{
+ .meta{
   display:flex;
   justify-content:space-between;
 
@@ -363,7 +364,8 @@ main{
   font-size:9px;
   text-transform:uppercase;
 
-  color:var(--muted);
+  color:#5f5b54;
+  opacity:1;
 }
 
 .poem-card h3{
@@ -372,6 +374,12 @@ main{
   font-size:28px;
   font-weight:400;
   letter-spacing:-.045em;
+}
+
+.poem-card .meta span:last-child{
+  color:#4e4a43;
+  opacity:1;
+  font-weight:600;
 }
 
 .poem-preview{
@@ -1079,7 +1087,8 @@ main{
   font-size:9px;
   line-height:2;
   text-transform:uppercase;
-  color:var(--muted);
+  color:#555149;
+  font-weight:600;
 }
 .dead-feature-content{max-width:800px;}
 .dead-feature-content h4{
@@ -1102,6 +1111,8 @@ main{
   font-family:"Courier New",monospace;
   font-size:10px;
   text-transform:uppercase;
+  color:#4e4a43;
+  font-weight:600;
 }
 .dead-actions{
   display:flex;
@@ -1148,8 +1159,8 @@ main{
   transition:.25s ease;
 }
 .dead-archive-card:hover{background:var(--soft);}
-.dead-card-number{font-family:"Courier New",monospace;font-size:9px;color:var(--muted);}
-.dead-card-mode{font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:var(--muted);margin-top:7px;}
+.dead-card-number{font-family:"Courier New",monospace;font-size:9px;color:#5a564f;font-weight:600;} 
+.dead-card-mode{font-family:"Courier New",monospace;font-size:8px;text-transform:uppercase;color:#555149;margin-top:7px;font-weight:600;}
 .dead-archive-card h4{
   margin:35px 0 16px;
   font-family:Georgia,serif;
@@ -1171,6 +1182,8 @@ main{
   font-family:"Courier New",monospace;
   font-size:9px;
   text-transform:uppercase;
+  color:#4e4a43;
+  font-weight:600;
 }
 .dead-empty{
   border:1px solid var(--line);
